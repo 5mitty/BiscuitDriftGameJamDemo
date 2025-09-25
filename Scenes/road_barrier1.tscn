@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6avoty871mdi"]
+
+[ext_resource type="PackedScene" uid="uid://daoi2dtfwsj7i" path="res://Assets/City Kit - Roads/Models/GLB format/tile-high.glb" id="1_xbk1h"]
+
+[node name="RoadBarrier" instance=ExtResource("1_xbk1h")]
+
+[node name="tile-high" parent="." index="0"]
+transform = Transform3D(12.6, 0, 0, 0, 7.56868, 0, 0, 0, 0.432, 0, 0, 0)

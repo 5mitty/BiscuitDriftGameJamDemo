@@ -1,0 +1,167 @@
+[gd_scene load_steps=5 format=3 uid="uid://dlouufqrai4ul"]
+
+[ext_resource type="Script" uid="uid://djy5rth0480p2" path="res://Scenes/start_save_load_scene.gd" id="1_o64ot"]
+[ext_resource type="Texture2D" uid="uid://blvsoo6i78dtj" path="res://Assets/Images/StartScreenImage2.png" id="2_okqdi"]
+[ext_resource type="StyleBox" uid="uid://cfafnory5c1hl" path="res://Materials/win_screen_button_gradient_pressed.tres" id="3_vrvll"]
+[ext_resource type="StyleBox" uid="uid://dt1pt8klc61hn" path="res://Materials/start_screen_play_normal.tres" id="4_cksv3"]
+
+[node name="StartScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_o64ot")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.641648, 0.459466, 0.796717, 1)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -49.0
+offset_bottom = 16.1757
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_okqdi")
+expand_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer3/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 42
+text = "BISCUIT DRIFT"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer"]
+layout_mode = 2
+
+[node name="PlayContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_bottom = 5
+
+[node name="LoadButton" type="Button" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/PlayContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("3_vrvll")
+theme_override_styles/pressed = ExtResource("4_cksv3")
+theme_override_styles/normal = ExtResource("4_cksv3")
+text = "LOAD"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="TutorialContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_bottom = 5
+
+[node name="NewSaveButton" type="Button" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/TutorialContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("3_vrvll")
+theme_override_styles/pressed = ExtResource("4_cksv3")
+theme_override_styles/normal = ExtResource("4_cksv3")
+text = "NEW SAVE"
+
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="QuitContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_bottom = 5
+
+[node name="BackButton" type="Button" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/QuitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("3_vrvll")
+theme_override_styles/pressed = ExtResource("4_cksv3")
+theme_override_styles/normal = ExtResource("4_cksv3")
+text = "BACK"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+visible = false
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "WARNING NEW SAVE WILL OVERWRITE A EXISTING SAVE"
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "TRY USING A CONTROLLER/GAMEPAD"
+horizontal_alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_bottom = 10
+
+[node name="Label2" type="Label" parent="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "W to accelerate, A-D to steer, S to reverse, Space to Handbrake"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[connection signal="pressed" from="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/PlayContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/TutorialContainer/NewSaveButton" to="." method="_on_new_save_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/QuitContainer/BackButton" to="." method="_on_back_button_pressed"]

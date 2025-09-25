@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://tm20hhdsodl0"]
+
+[ext_resource type="PackedScene" uid="uid://d1icm7drtnxa2" path="res://Assets/City Kit - Commercial/Models/FBX format/low_buildingA.fbx" id="1_t8hrv"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_3ysbj"]
+points = PackedVector3Array(-0.25, 0, -0.25, -0.25, 0, 0.25, -0.25, 0.49987, -0.25, 0.25, 0, -0.25, 0.25, 0, 0.25, -0.25, 0.49987, 0.25, -0.200029, 0.999914, -0.200029, 0.25, 0.49987, -0.25, 0.25, 0.49987, 0.25, -0.200029, 0.999914, 0.19998, -0.15001, 1.49996, -0.15001, 0.19998, 0.999914, -0.200029, 0.149961, 1.49996, 0.149961, -0.15001, 1.49996, 0.149961, -0.0125294, 1.775, -0.0125294, 0.149961, 1.49996, -0.15001, 0.0124804, 1.775, 0.0124804, -0.0125294, 1.775, 0.0124804, 0.0124804, 1.775, -0.0125294)
+
+[node name="low_buildingA" instance=ExtResource("1_t8hrv")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1"]
+collision_layer = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0"]
+shape = SubResource("ConvexPolygonShape3D_3ysbj")

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bs2ybwx3fs80x"
+path="res://.godot/imported/stack cash 808 (@prod_iron) 165bpm.wav-0aeb0363a080e33ad5a53f29e60a7f9b.sample"
+
+[deps]
+
+source_file="res://Music/TrapMusic/stack cash 808 (@prod_iron) 165bpm.wav"
+dest_files=["res://.godot/imported/stack cash 808 (@prod_iron) 165bpm.wav-0aeb0363a080e33ad5a53f29e60a7f9b.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

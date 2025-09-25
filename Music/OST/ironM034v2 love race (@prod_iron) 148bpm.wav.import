@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cknnhfy1khft4"
+path="res://.godot/imported/ironM034v2 love race (@prod_iron) 148bpm.wav-db0c99d7fac79e6e457b5c0e240a91cc.sample"
+
+[deps]
+
+source_file="res://Music/OST/ironM034v2 love race (@prod_iron) 148bpm.wav"
+dest_files=["res://.godot/imported/ironM034v2 love race (@prod_iron) 148bpm.wav-db0c99d7fac79e6e457b5c0e240a91cc.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

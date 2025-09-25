@@ -1,0 +1,359 @@
+[gd_scene load_steps=13 format=3 uid="uid://btw54y0sttf72"]
+
+[ext_resource type="Script" uid="uid://cg3v64e4p68bs" path="res://Scenes/main_menu.gd" id="1_n45e2"]
+[ext_resource type="Texture2D" uid="uid://dhfp4jqeix8r1" path="res://Assets/Images/MainMenuBackgroundImage.png" id="2_cp0ys"]
+[ext_resource type="Texture2D" uid="uid://cwetrpfwypgyu" path="res://Assets/Images/Map1MenuImage.png" id="3_opfnp"]
+[ext_resource type="StyleBox" uid="uid://cfafnory5c1hl" path="res://Materials/win_screen_button_gradient_pressed.tres" id="4_cp0ys"]
+[ext_resource type="Texture2D" uid="uid://bmcmbtcfdfuru" path="res://Assets/Images/CampMapBiscuitDriftDemoImage.png" id="6_16hvj"]
+[ext_resource type="StyleBox" uid="uid://dt1pt8klc61hn" path="res://Materials/start_screen_play_normal.tres" id="6_trj04"]
+[ext_resource type="Texture2D" uid="uid://dxm1ni26cxyrn" path="res://Assets/Images/Map1MenuImage2.png" id="7_cp0ys"]
+[ext_resource type="StyleBox" uid="uid://c762n4appv2e2" path="res://Materials/tutorial_screen_button_gradient_normal.tres" id="8_yhxw7"]
+[ext_resource type="StyleBox" uid="uid://bv7x5ye8ow7f5" path="res://Materials/main_menu_hover_box.tres" id="9_trj04"]
+
+[sub_resource type="Gradient" id="Gradient_trj04"]
+offsets = PackedFloat32Array(0, 0.797814, 0.912568)
+colors = PackedColorArray(0.12508, 0.734789, 0.874891, 1, 0.822673, 0.947485, 0.980232, 1, 0.606649, 0.797867, 0.941974, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_16hvj"]
+gradient = SubResource("Gradient_trj04")
+metadata/_snap_count = 44
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vr1f0"]
+texture = SubResource("GradientTexture2D_16hvj")
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n45e2")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.641648, 0.459466, 0.796717, 1)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -69.0
+offset_bottom = 28.3835
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_cp0ys")
+expand_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 155.0
+offset_top = 87.0
+offset_right = -154.0
+offset_bottom = -87.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="."]
+layout_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 314.0
+offset_top = 158.0
+offset_right = -313.0
+offset_bottom = -28.0
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer3"]
+layout_mode = 2
+
+[node name="MapSelect" type="Label" parent="MarginContainer3/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 42
+text = "MAP SELECT"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer3/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HLevelSelectBox" type="HBoxContainer" parent="MarginContainer3/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="MapSelectTile" type="VBoxContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "Suburbs"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
+layout_mode = 2
+texture = ExtResource("3_opfnp")
+expand_mode = 5
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PlayMap1Button" type="Button" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("4_cp0ys")
+theme_override_styles/pressed = ExtResource("6_trj04")
+theme_override_styles/normal = ExtResource("6_trj04")
+text = "PLAY"
+
+[node name="Label2" type="Label" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "Race around the suburbs and deliver packages of biscuits from the food & business district"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_bottom = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="MapSelectTile2" type="VBoxContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "In Development"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2"]
+layout_mode = 2
+texture = ExtResource("6_16hvj")
+expand_mode = 5
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PlayMap2Button" type="Button" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("4_cp0ys")
+theme_override_styles/pressed = ExtResource("6_trj04")
+theme_override_styles/normal = ExtResource("6_trj04")
+text = "PLAY"
+
+[node name="Label2" type="Label" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "Speed through camp to deliver packages of biscuits to hungry campers around the forest"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_bottom = 10
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="MapSelectTile3" type="VBoxContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile3"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "In Development"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile3"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile3"]
+layout_mode = 2
+texture = ExtResource("7_cp0ys")
+expand_mode = 5
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile3"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PlayMap3Button" type="Button" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile3"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("4_cp0ys")
+theme_override_styles/pressed = ExtResource("6_trj04")
+theme_override_styles/normal = ExtResource("6_trj04")
+text = "PLAY"
+
+[node name="Label2" type="Label" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile3"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "Speed through the city to deliver biscuits to hungry citizens around downtown"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile3"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer3/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="QuitContainer" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="QuitButton" type="Button" parent="MarginContainer3/VBoxContainer/HBoxContainer/QuitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("8_yhxw7")
+theme_override_styles/pressed = ExtResource("9_trj04")
+theme_override_styles/normal = ExtResource("9_trj04")
+text = "BACK"
+
+[node name="LoadContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+offset_left = 70.0
+offset_top = 439.0
+offset_right = 230.0
+offset_bottom = 690.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="LoadButton" type="Button" parent="LoadContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("8_yhxw7")
+theme_override_styles/pressed = ExtResource("9_trj04")
+theme_override_styles/normal = ExtResource("9_trj04")
+text = "LOAD"
+
+[node name="MarginContainer" type="MarginContainer" parent="LoadContainer"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="LoadContainer/MarginContainer"]
+visible = false
+layout_mode = 2
+color = Color(0.129558, 0.129558, 0.129558, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="LoadContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="LoadContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_styles/normal = SubResource("StyleBoxTexture_vr1f0")
+text = "Delivered
+Package Health
+
+4.95+ - $250
+4.5 - $200
+4.0 - $150
+3.5 -$100
+3.0 - $50
+2.0 - $25"
+horizontal_alignment = 1
+
+[node name="MoneyContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+offset_left = 70.0
+offset_top = 37.0
+offset_right = 230.0
+offset_bottom = 71.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MoneyLabel" type="Label" parent="MoneyContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MONEY: "
+
+[node name="MarginContainer4" type="MarginContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile/PlayMap1Button" to="." method="_on_play_map_1_button_pressed"]
+[connection signal="pressed" from="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2/PlayMap2Button" to="." method="_on_play_map_2_button_pressed"]
+[connection signal="pressed" from="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile3/PlayMap3Button" to="." method="_on_play_map_3_button_pressed"]
+[connection signal="pressed" from="MarginContainer3/VBoxContainer/HBoxContainer/QuitContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="LoadContainer/LoadButton" to="." method="_on_load_button_pressed"]

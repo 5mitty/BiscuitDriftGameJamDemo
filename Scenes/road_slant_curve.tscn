@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://etwkupgdij84"]
+
+[ext_resource type="PackedScene" uid="uid://3obui8wtl3dc" path="res://Assets/City Kit - Roads/Models/FBX format/road-slant-curve.fbx" id="1_f1tyd"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_f1tyd"]
+points = PackedVector3Array(-1, 0, -0.5, -1, 0, 0.5, -1, 0.019953, -0.5, 1, 0, -0.5, -1, 0.019953, 0.5, 1, 0, 0.5, 0.402702, 0.434945, -0.5, 1, 0.52, -0.5, 0.402702, 0.434945, 0.5, 1, 0.52, 0.5, 0.486296, 0.456731, -0.5, 0.913469, 0.517506, -0.5, 0.486296, 0.456731, 0.5, 0.913469, 0.517506, 0.5, 0.570673, 0.475309, -0.5, 0.82733, 0.511805, -0.5, 0.570673, 0.475309, 0.5, 0.82733, 0.511805, 0.5, 0.655834, 0.490681, -0.5, 0.741386, 0.502847, -0.5, 0.655834, 0.490681, 0.5, 0.741386, 0.502847, 0.5)
+
+[node name="road-slant-curve" instance=ExtResource("1_f1tyd")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1"]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0"]
+shape = SubResource("ConvexPolygonShape3D_f1tyd")

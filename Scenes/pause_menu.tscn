@@ -1,0 +1,75 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxlxyqmhtomj0"]
+
+[ext_resource type="Script" uid="uid://bblwjywda8s52" path="res://Scenes/pause_menu.gd" id="1_emv3i"]
+
+[node name="PauseMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -11.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("1_emv3i")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="MarginContainer/MarginContainer"]
+unique_name_in_owner = true
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/MarginContainer/CanvasLayer"]
+custom_minimum_size = Vector2(700, 500)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 280.0
+offset_top = 149.0
+offset_right = -300.0
+offset_bottom = -71.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer/CanvasLayer/MarginContainer2"]
+layout_mode = 2
+
+[node name="Resume" type="Button" parent="MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "Resume"
+
+[node name="Settings" type="Button" parent="MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "Settings
+"
+
+[node name="Quit" type="Button" parent="MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "Quit"
+
+[connection signal="pressed" from="MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

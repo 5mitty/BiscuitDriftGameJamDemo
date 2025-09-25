@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bescnv7k4p61r"]
+
+[ext_resource type="PackedScene" uid="uid://ckat0wth84i50" path="res://Assets/City Kit - Roads/Models/FBX format/road-split.fbx" id="1_t32mj"]
+[ext_resource type="Script" uid="uid://cp0eg6xllhe1c" path="res://Scenes/interactable.gd" id="2_flq55"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_flq55"]
+points = PackedVector3Array(0.5, 0.02, 0.500392, -0.0964174, 0.02, 0.878426, 0.5, 0, 0.500392, 0.5, 0.02, -0.5, -0.149765, 0.02, 0.908575, -0.0964174, 0, 0.878426, 0.5, 0, -0.5, -0.201449, 0.02, -0.915035, -0.204679, 0.02, 0.934808, -0.149765, 0, 0.908575, -0.201449, 0, -0.915035, -0.243246, 0.02, -0.936766, -0.260865, 0.02, 0.956735, -0.204679, 0, 0.934808, -0.243246, 0, -0.936766, -0.25, 0.02, -0.939898, -0.260865, 0, 0.956735, -0.318226, 0.02, 0.97455, -0.25, 0, -0.939898, -0.285435, 0.02, -0.955364, -0.318226, 0, 0.97455, -0.376566, 0.02, 0.987862, -0.285435, 0, -0.955364, -0.319792, 0.02, -0.967893, -0.376566, 0, 0.987862, -0.435689, 0.02, 0.99628, -0.319792, 0, -0.967893, -0.328015, 0.02, -0.97083, -0.435689, 0, 0.99628, -0.490407, 0.02, 1, -0.328015, 0, -0.97083, -0.370791, 0.02, -0.982968, -0.490407, 0, 1, -0.5, 0.02, 1, -0.370791, 0, -0.982968, -0.413763, 0.02, -0.991973, -0.5, 0, 1, -0.5, 0.02, -1, -0.413763, 0, -0.991973, -0.456832, 0.02, -0.997651, -0.5, 0, -1, -0.456832, 0, -0.997651)
+
+[node name="road-split" instance=ExtResource("1_t32mj")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_flq55")
+prompt_message = "On the Road"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0"]
+shape = SubResource("ConvexPolygonShape3D_flq55")

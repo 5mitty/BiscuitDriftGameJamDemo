@@ -1,0 +1,158 @@
+[gd_scene load_steps=4 format=3 uid="uid://cx01gycnukfad"]
+
+[ext_resource type="Script" uid="uid://c3v5pr6ond7gb" path="res://Scenes/tutorial_screen.gd" id="1_b7hhi"]
+[ext_resource type="Texture2D" uid="uid://c251ogtbdqyjd" path="res://Assets/Images/WinScreenimage.png" id="1_y8jer"]
+[ext_resource type="StyleBox" uid="uid://dq2wljw1e6f5e" path="res://Materials/tutorial_screen_button_gradient_pressed.tres" id="3_cd03v"]
+
+[node name="TutorialScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_b7hhi")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -17.0
+offset_bottom = 65.2904
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_y8jer")
+expand_mode = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 64
+text = "HOW TO PLAY"
+horizontal_alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 48
+text = "PICKUP ORDERS"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 42
+text = "First Collect Customer Orders"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 48
+text = "PICKUP PACKAGES"
+
+[node name="Label3" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 42
+text = "Collect packages for orders"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 48
+text = "DELIVER"
+horizontal_alignment = 1
+
+[node name="Label4" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 42
+text = "Return to Customers"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MarginContainer4" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 48
+text = "DRIVE CRAZY AND PACKAGES WILL BE DAMAGED"
+horizontal_alignment = 1
+
+[node name="MarginContainer5" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="NextContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="NextButton" type="Button" parent="MarginContainer/MarginContainer/VBoxContainer/NextContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("3_cd03v")
+theme_override_styles/pressed = ExtResource("3_cd03v")
+theme_override_styles/normal = ExtResource("3_cd03v")
+text = "Next
+"
+
+[connection signal="pressed" from="MarginContainer/MarginContainer/VBoxContainer/NextContainer/NextButton" to="." method="_on_next_button_pressed"]

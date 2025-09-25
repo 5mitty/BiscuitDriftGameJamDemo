@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://d01amk7ptr4va"
+path="res://.godot/imported/road-crossroad-line.obj-43af87afcde19c6d2ca003e6ca6a12fa.mesh"
+
+[deps]
+
+files=["res://.godot/imported/road-crossroad-line.obj-43af87afcde19c6d2ca003e6ca6a12fa.mesh"]
+
+source_file="res://Assets/City Kit - Roads/Models/OBJ format/road-crossroad-line.obj"
+dest_files=["res://.godot/imported/road-crossroad-line.obj-43af87afcde19c6d2ca003e6ca6a12fa.mesh", "res://.godot/imported/road-crossroad-line.obj-43af87afcde19c6d2ca003e6ca6a12fa.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,0 +1,12 @@
+[gd_resource type="StyleBoxTexture" load_steps=3 format=3 uid="uid://cxroipg5juls8"]
+
+[sub_resource type="Gradient" id="Gradient_l5sol"]
+offsets = PackedFloat32Array(0, 0.797814, 0.912568)
+colors = PackedColorArray(0.306131, 0.649805, 0.327178, 1, 0.881935, 0.881938, 0.881936, 1, 0.992223, 0.632555, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_a00f1"]
+gradient = SubResource("Gradient_l5sol")
+metadata/_snap_count = 44
+
+[resource]
+texture = SubResource("GradientTexture2D_a00f1")
