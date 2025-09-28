@@ -1,0 +1,236 @@
+[gd_scene load_steps=16 format=3 uid="uid://cvvcev8jfkd1c"]
+
+[ext_resource type="Material" uid="uid://e5dlah42jn35" path="res://Materials/gameCampGround.tres" id="1_7pyv3"]
+[ext_resource type="Script" uid="uid://dvbuopw4t5ept" path="res://Scenes/garage_selection_scene.gd" id="1_clqmu"]
+[ext_resource type="PackedScene" uid="uid://cxy1uj3rb13u" path="res://Assets/Car Kit/Models/FBX format/sedan.fbx" id="2_crsjj"]
+[ext_resource type="PackedScene" uid="uid://c0ry1qowo34ev" path="res://Assets/Car Kit/Models/FBX format/suv-luxury.fbx" id="2_qclpj"]
+[ext_resource type="PackedScene" uid="uid://bjofsuoqcvqvc" path="res://Assets/Car Kit/Models/FBX format/suv.fbx" id="4_faw8h"]
+[ext_resource type="PackedScene" uid="uid://dvx47b8yg0sw7" path="res://Assets/Car Kit/Models/FBX format/taxi.fbx" id="5_gsyxu"]
+[ext_resource type="PackedScene" uid="uid://cfn56q3rcmkcu" path="res://Assets/Car Kit/Models/FBX format/van.fbx" id="6_clqmu"]
+[ext_resource type="StyleBox" uid="uid://bod5iqq51uoa6" path="res://Materials/garage_selection_scene3.tres" id="7_faw8h"]
+[ext_resource type="StyleBox" uid="uid://dgxy3jyjr8uj2" path="res://Materials/garage_selection_scene_hover.tres" id="8_gsyxu"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_crsjj"]
+sky_top_color = Color(0.145545, 0.246072, 0.743515, 1)
+sky_horizon_color = Color(0.52424, 0.529915, 0.794133, 1)
+ground_bottom_color = Color(0.265961, 0.188134, 0.747563, 1)
+ground_horizon_color = Color(0.52424, 0.529915, 0.794133, 1)
+
+[sub_resource type="Sky" id="Sky_wrm1d"]
+sky_material = SubResource("ProceduralSkyMaterial_crsjj")
+
+[sub_resource type="Environment" id="Environment_nf0mo"]
+background_mode = 2
+sky = SubResource("Sky_wrm1d")
+tonemap_mode = 2
+
+[sub_resource type="Gradient" id="Gradient_gsyxu"]
+offsets = PackedFloat32Array(0.00276243, 0.320442, 0.912568)
+colors = PackedColorArray(0.428141, 0.626609, 0.970237, 1, 0.480514, 0.732889, 0.966889, 1, 0.276574, 0.73905, 0.935258, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_clqmu"]
+gradient = SubResource("Gradient_gsyxu")
+metadata/_snap_count = 44
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rwkdw"]
+content_margin_left = 20.0
+content_margin_top = 2.0
+content_margin_right = 20.0
+content_margin_bottom = 2.0
+texture = SubResource("GradientTexture2D_clqmu")
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[node name="GarageSelection" type="Node3D"]
+script = ExtResource("1_clqmu")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_nf0mo")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.213474, 0.976949, 0, -0.976949, -0.213474, 0, 32.1312, 0)
+
+[node name="Scene" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Scene"]
+transform = Transform3D(-2.13371e-07, 0, 3.83762, 0, 5.90961, 0, -4.88135, 0, -1.67748e-07, 30.0128, -2.91683, -64.9345)
+layers = 2
+use_collision = true
+collision_layer = 2
+collision_mask = 0
+size = Vector3(80, 1, 80)
+material = ExtResource("1_7pyv3")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.999825, -0.00295604, 0.0184737, -4.12955e-09, 0.987439, 0.158003, -0.0187087, 0.157975, -0.987266, 0.711697, 1.57868, -2.21151)
+fov = 80.0
+
+[node name="Cars" type="Node3D" parent="."]
+
+[node name="van" parent="Cars" instance=ExtResource("6_clqmu")]
+unique_name_in_owner = true
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="taxi" parent="Cars" instance=ExtResource("5_gsyxu")]
+unique_name_in_owner = true
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+visible = false
+
+[node name="suv" parent="Cars" instance=ExtResource("4_faw8h")]
+unique_name_in_owner = true
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+visible = false
+
+[node name="suv-luxury" parent="Cars" instance=ExtResource("2_qclpj")]
+unique_name_in_owner = true
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+visible = false
+
+[node name="sedan" parent="Cars" instance=ExtResource("2_crsjj")]
+unique_name_in_owner = true
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+visible = false
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -811.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Control/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxTexture_rwkdw")
+text = "CAR SELECT"
+horizontal_alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="Control/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 80
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="VanButton" type="Button" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/hover = ExtResource("8_gsyxu")
+theme_override_styles/pressed = ExtResource("7_faw8h")
+theme_override_styles/normal = ExtResource("7_faw8h")
+text = "VAN"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="TaxiButton" type="Button" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/hover = ExtResource("8_gsyxu")
+theme_override_styles/pressed = ExtResource("7_faw8h")
+theme_override_styles/normal = ExtResource("7_faw8h")
+text = "TAXI"
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="SuvButton" type="Button" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/hover = ExtResource("8_gsyxu")
+theme_override_styles/pressed = ExtResource("7_faw8h")
+theme_override_styles/normal = ExtResource("7_faw8h")
+text = "SUV"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="LuxButton" type="Button" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/hover = ExtResource("8_gsyxu")
+theme_override_styles/pressed = ExtResource("7_faw8h")
+theme_override_styles/normal = ExtResource("7_faw8h")
+text = "LUX"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Control/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="SedanButton" type="Button" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/hover = ExtResource("8_gsyxu")
+theme_override_styles/pressed = ExtResource("7_faw8h")
+theme_override_styles/normal = ExtResource("7_faw8h")
+text = "SEDAN"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="Button2" type="Button" parent="Control/Control/MarginContainer/VBoxContainer/HBoxContainer4"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = ExtResource("7_faw8h")
+text = "TAXI"
+
+[connection signal="pressed" from="Control/Control/MarginContainer/VBoxContainer/HBoxContainer/VanButton" to="." method="_on_van_button_pressed"]
+[connection signal="pressed" from="Control/Control/MarginContainer/VBoxContainer/HBoxContainer/TaxiButton" to="." method="_on_taxi_button_pressed"]
+[connection signal="pressed" from="Control/Control/MarginContainer/VBoxContainer/HBoxContainer2/SuvButton" to="." method="_on_suv_button_pressed"]
+[connection signal="pressed" from="Control/Control/MarginContainer/VBoxContainer/HBoxContainer2/LuxButton" to="." method="_on_lux_button_pressed"]
+[connection signal="pressed" from="Control/Control/MarginContainer/VBoxContainer/HBoxContainer4/SedanButton" to="." method="_on_sedan_button_pressed"]

@@ -8,7 +8,7 @@
 [ext_resource type="StyleBox" uid="uid://dt1pt8klc61hn" path="res://Materials/start_screen_play_normal.tres" id="6_trj04"]
 [ext_resource type="Texture2D" uid="uid://dxm1ni26cxyrn" path="res://Assets/Images/Map1MenuImage2.png" id="7_cp0ys"]
 [ext_resource type="StyleBox" uid="uid://c762n4appv2e2" path="res://Materials/tutorial_screen_button_gradient_normal.tres" id="8_yhxw7"]
-[ext_resource type="StyleBox" uid="uid://bv7x5ye8ow7f5" path="res://Materials/main_menu_hover_box.tres" id="9_trj04"]
+[ext_resource type="StyleBox" uid="uid://c8p4l5ic6nsgu" path="res://Materials/garage_select.tres" id="9_trj04"]
 
 [sub_resource type="Gradient" id="Gradient_trj04"]
 offsets = PackedFloat32Array(0, 0.797814, 0.912568)
@@ -271,8 +271,8 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 24
 theme_override_styles/hover = ExtResource("8_yhxw7")
-theme_override_styles/pressed = ExtResource("9_trj04")
-theme_override_styles/normal = ExtResource("9_trj04")
+theme_override_styles/pressed = ExtResource("8_yhxw7")
+theme_override_styles/normal = ExtResource("8_yhxw7")
 text = "BACK"
 
 [node name="LoadContainer" type="MarginContainer" parent="."]
