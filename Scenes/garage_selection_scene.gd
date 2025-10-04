@@ -1,6 +1,9 @@
 extends Node3D
 
 var save_path = "user://player_data.save"
+var start_save_load_scene = preload("res://Scenes/start_save_load_scene.tscn")
+var start_screen_scene = preload("res://Scenes/start_screen.tscn")
+var main_menu_scene = preload("res://Scenes/main_menu.tscn")
 var package_score = 0
 var package_scores = []
 var finished_time = 0.0
@@ -36,7 +39,10 @@ var vehicles_purchased = [van_purchased, taxi_purchased, suv_purchased, lux_purc
 
 func _ready():
 	_load_data()
-	if vehicle_selected == 1:
+	print("ONLOAD: " + str(vehicle_selected))
+	if vehicle_selected == null:
+		vehicle_selected = 1
+	elif vehicle_selected == 1:
 		_on_van_button_pressed()
 	elif vehicle_selected == 2:
 		_on_taxi_button_pressed()
@@ -46,6 +52,7 @@ func _ready():
 		_on_lux_button_pressed()
 	elif vehicle_selected == 5:
 		_on_sedan_button_pressed()
+	print("Vehicles selected at start: " + str(vehicle_selected))
 
 func _physics_process(delta):
 	_load_data()
@@ -88,6 +95,7 @@ func _load_data():
 		
 func _on_vehicle_purchase_pressed(vehicle_price, vehicle_id):
 	_load_data()
+	print("playermoneyloaded: " + str(player_money_total))
 	if player_money_total >= vehicle_price:
 		if vehicle_id == 1 && !van_purchased:
 			vehicle_price_label.text = "PRICE: 0"
@@ -95,6 +103,7 @@ func _on_vehicle_purchase_pressed(vehicle_price, vehicle_id):
 		elif vehicle_id == 2 && !taxi_purchased:
 			taxi_purchased = true
 			player_money_total -= taxi_price
+			print("playermoney down to: " + str(player_money_total))
 			vehicle_price_label.text = "PRICE: 0"
 			vehicle_purchase_button.text = "OWNED"
 		elif vehicle_id == 3 && !suv_purchased:
@@ -120,6 +129,9 @@ func _on_vehicle_purchase_pressed(vehicle_price, vehicle_id):
 	_save_data()
 
 func _on_van_button_pressed():
+	vehicle_selected = 1
+	_save_data()
+	_load_data()
 	van.show()
 	taxi.hide()
 	suv.hide()
@@ -131,14 +143,13 @@ func _on_van_button_pressed():
 	else:
 		vehicle_price_label.text = "PRICE: 0"
 		vehicle_purchase_button.text = "OWNED"
-	vehicle_selected = 1
-	if van_purchased:
-		_save_data()
-	else:
-		_load_data()
 	print("Vehicle selected: " + str(vehicle_selected))
 
 func _on_taxi_button_pressed():
+	vehicle_selected = 2
+	_save_data()
+	_load_data()
+	print("loaded selection: " + str(vehicle_selected))
 	van.hide()
 	taxi.show()
 	suv.hide()
@@ -151,14 +162,13 @@ func _on_taxi_button_pressed():
 	else:
 		vehicle_price_label.text = "PRICE: " + str(taxi_price)
 		vehicle_purchase_button.text = "PURCHASE"
-	vehicle_selected = 2
-	if taxi_purchased:
-		_save_data()
-	else:
-		_load_data()
 	print("Vehicle selected: " + str(vehicle_selected))
 
 func _on_suv_button_pressed():
+	vehicle_selected = 3
+	_save_data()
+	_load_data()
+	print("loaded selection: " + str(vehicle_selected))
 	van.hide()
 	taxi.hide()
 	suv.show()
@@ -171,14 +181,13 @@ func _on_suv_button_pressed():
 	else:
 		vehicle_price_label.text = "PRICE: " + str(suv_price)
 		vehicle_purchase_button.text = "PURCHASE"
-	vehicle_selected = 3
-	if suv_purchased:
-		_save_data()
-	else:
-		_load_data()
 	print("Vehicle selected: " + str(vehicle_selected))
 
 func _on_lux_button_pressed():
+	vehicle_selected = 4
+	_save_data()
+	_load_data()
+	print("loaded selection: " + str(vehicle_selected))
 	van.hide()
 	taxi.hide()
 	suv.hide()
@@ -191,14 +200,13 @@ func _on_lux_button_pressed():
 	else:
 		vehicle_price_label.text = "PRICE: " + str(lux_price)
 		vehicle_purchase_button.text = "PURCHASE"
-	vehicle_selected = 4
-	if lux_purchased:
-		_save_data()
-	else:
-		_load_data()
 	print("Vehicle selected: " + str(vehicle_selected))
 
 func _on_sedan_button_pressed():
+	vehicle_selected = 5
+	_save_data()
+	_load_data()
+	print("loaded selection: " + str(vehicle_selected))
 	van.hide()
 	taxi.hide()
 	suv.hide()
@@ -208,14 +216,10 @@ func _on_sedan_button_pressed():
 	if sedan_purchased:
 		vehicle_price_label.text = "PRICE: 0"
 		vehicle_purchase_button.text = "OWNED"
+		print("PURCHASED")
 	else:
 		vehicle_price_label.text = "PRICE: " + str(sedan_price)
 		vehicle_purchase_button.text = "PURCHASE"
-	vehicle_selected = 5
-	if sedan_purchased:
-		_save_data()
-	else:
-		_load_data()
 	print("Vehicle selected: " + str(vehicle_selected))
 	
 func _on_vehicle_purchase_button_pressed():
@@ -234,7 +238,11 @@ func _on_debug_button_pressed():
 	player_money_total += 250
 	_save_data()
 	_load_data()
-	
+
 func _on_next_button_pressed():
 	_save_data()
 	print("Vehicle selected: " + str(vehicle_selected))
+	get_tree().change_scene_to_packed(main_menu_scene)
+
+func _on_back_button_pressed():
+	get_tree().change_scene_to_packed(start_screen_scene)

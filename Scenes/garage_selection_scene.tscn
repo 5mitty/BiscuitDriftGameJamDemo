@@ -285,6 +285,7 @@ layout_mode = 2
 theme_override_constants/margin_left = 30
 
 [node name="BackButton" type="Button" parent="Control/Control/VBoxContainer/HBoxContainer3"]
+visible = false
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 42
@@ -398,6 +399,7 @@ grow_vertical = 2
 [connection signal="pressed" from="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/SuvButton" to="." method="_on_suv_button_pressed"]
 [connection signal="pressed" from="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/LuxButton" to="." method="_on_lux_button_pressed"]
 [connection signal="pressed" from="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer4/SedanButton" to="." method="_on_sedan_button_pressed"]
+[connection signal="pressed" from="Control/Control/VBoxContainer/HBoxContainer3/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="Control/Control/VBoxContainer/HBoxContainer3/DebugButton" to="." method="_on_debug_button_pressed"]
 [connection signal="pressed" from="Control/ConfirmControl2/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VehiclePurchaseButton" to="." method="_on_vehicle_purchase_button_pressed"]
 [connection signal="pressed" from="Control/ConfirmControl2/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/NextButton" to="." method="_on_next_button_pressed"]

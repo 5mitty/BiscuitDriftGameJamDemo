@@ -11,6 +11,7 @@ var player_money_total = 0
 @export var tutorial_scene: PackedScene = preload("res://Scenes/tutorial_screen.tscn")
 @export var start_screen_scene: PackedScene = preload("res://Scenes/start_screen.tscn")
 @export var new_save_warning_scene: PackedScene = preload("res://Scenes/start_save_load_scene_new_save_warning.tscn")
+@export var garage_selection_scene: PackedScene = preload("res://Scenes/garage_selection_scene.tscn")
 @onready var load_button = %LoadButton
 @onready var new_save_button = %NewSaveButton
 @onready var back_button = %BackButton
@@ -47,7 +48,8 @@ func _delete_save_data():
 
 func _on_load_button_pressed():
 	_load_data()
-	get_tree().change_scene_to_packed(main_menu_scene)
+	#get_tree().change_scene_to_packed(main_menu_scene)
+	get_tree().change_scene_to_packed(garage_selection_scene)
 
 
 func _on_new_save_button_pressed():

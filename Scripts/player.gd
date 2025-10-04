@@ -5,9 +5,20 @@ var package_score = 0
 var package_scores = []
 var finished_time = 0.0
 var finished_times: Array = []
-#var player_money = 1
 var player_money_total = 0
 var money_to_add_total = 0
+var van_purchased = true
+var taxi_purchased = false
+var suv_purchased = false
+var lux_purchased = false
+var sedan_purchased = true
+var van_price = 0
+var taxi_price = 300
+var suv_price = 500
+var lux_price = 1000
+var sedan_price = 2500
+var vehicles_id = [1, 2, 3, 4, 5]
+var vehicle_selected = 1
 @export var MAX_STEER = 0.9
 @export var ENGINE_POWER = 400
 @export var CAMERA_FOLLOW_SPEED = 10.0
@@ -86,8 +97,13 @@ var main_menu = preload("res://Scenes/main_menu.tscn")
 #var win_screen = preload("res://Scenes/win_screen.tscn")
 
 var packages_collected = []
-
 var checkpoint_flags: Array = [flag, flag_2, flag_3]
+
+@onready var van_body = %vanBody
+@onready var taxi_body = %taxiBody
+@onready var suv_body = %suvBody
+@onready var lux_body = %luxBody
+@onready var sedan_body = %sedanBody
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -97,6 +113,7 @@ func _ready():
 	flag_count_label.text = ""
 	order_count_label.text = "No Orders Yet"
 	displayMessage("Collect all orders in the neighborhood", 4)
+	_display_selected_vehicle()
 	
 func _physics_process(delta):
 	camera_pivot.global_position = camera_pivot.global_position.lerp(global_position, delta * CAMERA_FOLLOW_SPEED)
@@ -139,6 +156,10 @@ func _physics_process(delta):
 			##win_screen.hide()
 			##win_canvas_layer.hide()
 		#
+	if Input.is_action_pressed("ui_up"):
+		first_gear_audio.play()
+	else:
+		first_gear_audio.stop()
 		
 	if Input.is_action_pressed("ui_cancel"):
 		_pause_menu()
@@ -621,6 +642,12 @@ func _save_data():
 	file.store_var(package_scores)
 	file.store_var(finished_times)
 	file.store_var(player_money_total)
+	file.store_var(van_purchased)
+	file.store_var(taxi_purchased)
+	file.store_var(suv_purchased)
+	file.store_var(lux_purchased)
+	file.store_var(sedan_purchased)
+	file.store_var(vehicle_selected)
 	
 func _load_data():
 	if FileAccess.file_exists(save_path):
@@ -628,9 +655,48 @@ func _load_data():
 		package_scores = file.get_var()
 		finished_times = file.get_var()
 		player_money_total = file.get_var()
+		van_purchased = file.get_var()
+		taxi_purchased = file.get_var()
+		suv_purchased = file.get_var()
+		lux_purchased = file.get_var()
+		sedan_purchased = file.get_var()
+		vehicle_selected = file.get_var()
 		print("Finished Times on file: " + str(finished_times))
 
 func _on_play_button_pressed():
 	#print("WORKINGGGG")
 	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
 	#win_screen.hide()
+	
+func _display_selected_vehicle():
+	_load_data()
+	if vehicle_selected == 1:
+		van_body.show()
+		taxi_body.hide()
+		suv_body.hide()
+		lux_body.hide()
+		sedan_body.hide()
+	elif vehicle_selected == 2:
+		van_body.hide()
+		taxi_body.show()
+		suv_body.hide()
+		lux_body.hide()
+		sedan_body.hide()
+	elif vehicle_selected == 3:
+		van_body.hide()
+		taxi_body.hide()
+		suv_body.show()
+		lux_body.hide()
+		sedan_body.hide()
+	elif vehicle_selected == 4:
+		van_body.hide()
+		taxi_body.hide()
+		suv_body.hide()
+		lux_body.show()
+		sedan_body.hide()
+	elif vehicle_selected == 5:
+		van_body.hide()
+		taxi_body.hide()
+		suv_body.hide()
+		lux_body.hide()
+		sedan_body.show()
