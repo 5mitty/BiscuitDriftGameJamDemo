@@ -69,6 +69,10 @@ var current_driver_stars = ""
 var current_package_health = ""
 var current_time_left = ""
 
+@onready var first_gear_audio = %FirstGearAudio
+@onready var second_gear_audio = %SecondGearAudio
+@onready var third_gear_audio = %ThirdGearAudio
+
 @onready var Game = $".."
 @onready var flag = $"../Flag"
 @onready var flag_2 = $"../Flag2"

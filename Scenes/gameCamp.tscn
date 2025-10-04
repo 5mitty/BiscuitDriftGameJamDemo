@@ -620,7 +620,9 @@ stream = SubResource("AudioStreamPlaylist_v158k")
 volume_db = -2.0
 autoplay = true
 
-[node name="Player" type="VehicleBody3D" parent="."]
+[node name="Cars" type="Node3D" parent="."]
+
+[node name="Player" type="VehicleBody3D" parent="Cars"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0237964, 0.12, 1.0555)
 collision_mask = 46
 mass = 30.0
@@ -629,7 +631,7 @@ center_of_mass = Vector3(0, 0.1, 0.2)
 angular_velocity = Vector3(0, 0, -0.174533)
 script = ExtResource("7_bdcaw")
 
-[node name="FrontRight" type="VehicleWheel3D" parent="Player"]
+[node name="FrontRight" type="VehicleWheel3D" parent="Cars/Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.3, 0.76)
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -641,18 +643,18 @@ suspension_stiffness = 70.0
 damping_compression = 1.9
 damping_relaxation = 2.0
 
-[node name="wheel-front-right" type="MeshInstance3D" parent="Player/FrontRight"]
+[node name="wheel-front-right" type="MeshInstance3D" parent="Cars/Player/FrontRight"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0, 0)
 visible = false
 mesh = SubResource("ArrayMesh_uj0dp")
 skeleton = NodePath("")
 
-[node name="wheel-front-right2" type="MeshInstance3D" parent="Player/FrontRight"]
+[node name="wheel-front-right2" type="MeshInstance3D" parent="Cars/Player/FrontRight"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.216105, 0, -0.00227833)
 mesh = SubResource("ArrayMesh_kn1ij")
 skeleton = NodePath("")
 
-[node name="FrontLeft" type="VehicleWheel3D" parent="Player"]
+[node name="FrontLeft" type="VehicleWheel3D" parent="Cars/Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.3, 0.76)
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -663,18 +665,18 @@ suspension_travel = 0.1
 suspension_stiffness = 70.0
 damping_relaxation = 2.0
 
-[node name="wheel-front-left" type="MeshInstance3D" parent="Player/FrontLeft"]
+[node name="wheel-front-left" type="MeshInstance3D" parent="Cars/Player/FrontLeft"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0)
 visible = false
 mesh = SubResource("ArrayMesh_apwjb")
 skeleton = NodePath("")
 
-[node name="wheel-front-left2" type="MeshInstance3D" parent="Player/FrontLeft"]
+[node name="wheel-front-left2" type="MeshInstance3D" parent="Cars/Player/FrontLeft"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.183895, 0, -0.00227833)
 mesh = SubResource("ArrayMesh_momt7")
 skeleton = NodePath("")
 
-[node name="BackRight" type="VehicleWheel3D" parent="Player"]
+[node name="BackRight" type="VehicleWheel3D" parent="Cars/Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.501067, 0.307243, -0.760301)
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -685,18 +687,18 @@ suspension_travel = 0.07
 suspension_stiffness = 100.0
 damping_relaxation = 2.0
 
-[node name="wheel-back-right" type="MeshInstance3D" parent="Player/BackRight"]
+[node name="wheel-back-right" type="MeshInstance3D" parent="Cars/Player/BackRight"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0, 0)
 visible = false
 mesh = SubResource("ArrayMesh_6eapb")
 skeleton = NodePath("")
 
-[node name="wheel-back-right2" type="MeshInstance3D" parent="Player/BackRight"]
+[node name="wheel-back-right2" type="MeshInstance3D" parent="Cars/Player/BackRight"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.217172, -0.00724298, -0.00197732)
 mesh = SubResource("ArrayMesh_3sxbx")
 skeleton = NodePath("")
 
-[node name="BackLeft" type="VehicleWheel3D" parent="Player"]
+[node name="BackLeft" type="VehicleWheel3D" parent="Cars/Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.496228, 0.307243, -0.764076)
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -707,59 +709,59 @@ suspension_travel = 0.07
 suspension_stiffness = 100.0
 damping_relaxation = 2.0
 
-[node name="wheel-back-left" type="MeshInstance3D" parent="Player/BackLeft"]
+[node name="wheel-back-left" type="MeshInstance3D" parent="Cars/Player/BackLeft"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0)
 visible = false
 mesh = SubResource("ArrayMesh_u3kkx")
 skeleton = NodePath("")
 
-[node name="wheel-back-left2" type="MeshInstance3D" parent="Player/BackLeft"]
+[node name="wheel-back-left2" type="MeshInstance3D" parent="Cars/Player/BackLeft"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.180123, -0.00724298, 0.00179768)
 mesh = SubResource("ArrayMesh_us01s")
 skeleton = NodePath("")
 
-[node name="body2" type="MeshInstance3D" parent="Player"]
+[node name="body2" type="MeshInstance3D" parent="Cars/Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0161052, 0.2, 0.0977217)
 mesh = SubResource("ArrayMesh_kbnbg")
 skeleton = NodePath("")
 
-[node name="body" type="MeshInstance3D" parent="Player"]
+[node name="body" type="MeshInstance3D" parent="Cars/Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.169371, -0.025)
 visible = false
 mesh = SubResource("ArrayMesh_buqrh")
 skeleton = NodePath("")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cars/Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000559211, 0.170337, -0.023365)
 shape = SubResource("ConvexPolygonShape3D_umuq7")
 
-[node name="CoM" type="Node3D" parent="Player"]
+[node name="CoM" type="Node3D" parent="Cars/Player"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.2)
 
-[node name="CameraPivot" type="Node3D" parent="Player"]
+[node name="CameraPivot" type="Node3D" parent="Cars/Player"]
 unique_name_in_owner = true
 top_level = true
 
-[node name="Camera3D" type="Camera3D" parent="Player/CameraPivot"]
+[node name="Camera3D" type="Camera3D" parent="Cars/Player/CameraPivot"]
 transform = Transform3D(-1, -1.51809e-08, 8.60947e-08, 1.39652e-08, 0.944422, 0.328735, -8.63002e-08, 0.328735, -0.944422, -0.0277313, 2.30318, -2.18835)
 fov = 90.0
 
-[node name="RayCast3D" type="RayCast3D" parent="Player"]
+[node name="RayCast3D" type="RayCast3D" parent="Cars/Player"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 collision_mask = 4
 script = ExtResource("10_0ujqk")
 
-[node name="Area3D" type="Area3D" parent="Player"]
+[node name="Area3D" type="Area3D" parent="Cars/Player"]
 visible = false
 collision_mask = 4
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Player/Area3D"]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Cars/Player/Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.528721, 0)
 shape = SubResource("BoxShape3D_umuq7")
 
-[node name="UI" type="Control" parent="Player"]
+[node name="UI" type="Control" parent="Cars/Player"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -767,7 +769,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ForceSteeringLabel" type="Label" parent="Player/UI"]
+[node name="ForceSteeringLabel" type="Label" parent="Cars/Player/UI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -781,7 +783,7 @@ label_settings = SubResource("LabelSettings_umuq7")
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="ScoreLabel" type="Label" parent="Player/UI"]
+[node name="ScoreLabel" type="Label" parent="Cars/Player/UI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -798,7 +800,7 @@ theme_override_font_sizes/font_size = 32
 text = "Package Health:
 Driving Score:"
 
-[node name="ColliderLabel" type="Label" parent="Player/UI"]
+[node name="ColliderLabel" type="Label" parent="Cars/Player/UI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 7
@@ -816,7 +818,7 @@ theme_override_font_sizes/font_size = 12
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CountdownLabel" type="Label" parent="Player/UI"]
+[node name="CountdownLabel" type="Label" parent="Cars/Player/UI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -833,7 +835,7 @@ theme_override_font_sizes/font_size = 20
 text = "Time Left:"
 horizontal_alignment = 1
 
-[node name="CheckpointLabel" type="Label" parent="Player/UI"]
+[node name="CheckpointLabel" type="Label" parent="Cars/Player/UI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -848,7 +850,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="FlagCountLabel" type="Label" parent="Player/UI"]
+[node name="FlagCountLabel" type="Label" parent="Cars/Player/UI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -865,7 +867,7 @@ theme_override_font_sizes/font_size = 32
 text = "Packages"
 horizontal_alignment = 2
 
-[node name="OrderCountLabel" type="Label" parent="Player/UI"]
+[node name="OrderCountLabel" type="Label" parent="Cars/Player/UI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -882,24 +884,24 @@ theme_override_font_sizes/font_size = 32
 text = "Orders"
 horizontal_alignment = 2
 
-[node name="CountdownTimer" type="Timer" parent="Player"]
+[node name="CountdownTimer" type="Timer" parent="Cars/Player"]
 unique_name_in_owner = true
 one_shot = true
 
-[node name="DriverStarsCheckTimer" type="Timer" parent="Player"]
+[node name="DriverStarsCheckTimer" type="Timer" parent="Cars/Player"]
 unique_name_in_owner = true
 autostart = true
 
-[node name="CheckpointTimer" type="Timer" parent="Player"]
+[node name="CheckpointTimer" type="Timer" parent="Cars/Player"]
 unique_name_in_owner = true
 
-[node name="van" type="Node3D" parent="Player"]
+[node name="van" type="Node3D" parent="Cars/Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0161052, 0, -0.00227833)
 visible = false
 
-[node name="van" type="Node3D" parent="Player/van"]
+[node name="van" type="Node3D" parent="Cars/Player/van"]
 
-[node name="PauseMenu" type="Control" parent="Player"]
+[node name="PauseMenu" type="Control" parent="Cars/Player"]
 unique_name_in_owner = true
 process_mode = 3
 visible = false
@@ -914,7 +916,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 script = ExtResource("11_ub5et")
 
-[node name="MarginContainer" type="MarginContainer" parent="Player/PauseMenu"]
+[node name="MarginContainer" type="MarginContainer" parent="Cars/Player/PauseMenu"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -922,26 +924,26 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Player/PauseMenu/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Cars/Player/PauseMenu/MarginContainer"]
 layout_mode = 2
 
-[node name="CanvasLayer" type="CanvasLayer" parent="Player/PauseMenu/MarginContainer/MarginContainer"]
+[node name="CanvasLayer" type="CanvasLayer" parent="Cars/Player/PauseMenu/MarginContainer/MarginContainer"]
 unique_name_in_owner = true
 visible = false
 
-[node name="MarginContainer2" type="MarginContainer" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer"]
+[node name="MarginContainer2" type="MarginContainer" parent="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MarginContainer2" type="MarginContainer" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer"]
 custom_minimum_size = Vector2(600, 300)
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -949,33 +951,33 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ColorRect" type="ColorRect" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2"]
+[node name="ColorRect" type="ColorRect" parent="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2"]
 layout_mode = 2
 color = Color(0.31802, 0.31802, 0.31802, 0.803922)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2"]
 layout_mode = 2
 
-[node name="Resume" type="Button" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
+[node name="Resume" type="Button" parent="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 80
 text = "Resume"
 
-[node name="Settings" type="Button" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
+[node name="Settings" type="Button" parent="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 80
 text = "Settings
 "
 
-[node name="Quit" type="Button" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
+[node name="Quit" type="Button" parent="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 80
 text = "Quit"
 
-[node name="PauseSettingsMenu" type="Control" parent="Player"]
+[node name="PauseSettingsMenu" type="Control" parent="Cars/Player"]
 unique_name_in_owner = true
 process_mode = 3
 visible = false
@@ -991,7 +993,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 script = ExtResource("12_smjxm")
 
-[node name="MarginContainer" type="MarginContainer" parent="Player/PauseSettingsMenu"]
+[node name="MarginContainer" type="MarginContainer" parent="Cars/Player/PauseSettingsMenu"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.009
@@ -1003,52 +1005,52 @@ offset_bottom = -220.36
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Player/PauseSettingsMenu/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Cars/Player/PauseSettingsMenu/MarginContainer"]
 layout_mode = 2
 
-[node name="SettingsCanvasLayer" type="CanvasLayer" parent="Player/PauseSettingsMenu/MarginContainer/MarginContainer"]
+[node name="SettingsCanvasLayer" type="CanvasLayer" parent="Cars/Player/PauseSettingsMenu/MarginContainer/MarginContainer"]
 unique_name_in_owner = true
 visible = false
 
-[node name="ColorRect" type="ColorRect" parent="Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer"]
+[node name="ColorRect" type="ColorRect" parent="Cars/Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer"]
 offset_left = 256.0
 offset_top = 201.0
 offset_right = 1025.0
 offset_bottom = 501.0
 color = Color(0.266575, 0.266575, 0.266575, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Cars/Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer"]
 offset_left = 256.0
 offset_top = 201.0
 offset_right = 1025.0
 offset_bottom = 501.0
 
-[node name="SettingsLabel" type="Label" parent="Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
+[node name="SettingsLabel" type="Label" parent="Cars/Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 64
 text = "Settings"
 horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Cars/Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_top = 10
 
-[node name="SettingsChange" type="Label" parent="Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
+[node name="SettingsChange" type="Label" parent="Cars/Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "In Development!"
 horizontal_alignment = 1
 
-[node name="MarginContainer2" type="MarginContainer" parent="Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="Cars/Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_top = 10
 
-[node name="Back" type="Button" parent="Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
+[node name="Back" type="Button" parent="Cars/Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 65
 text = "Back"
 
-[node name="PauseFreeRoamMenu" type="Control" parent="Player"]
+[node name="PauseFreeRoamMenu" type="Control" parent="Cars/Player"]
 unique_name_in_owner = true
 process_mode = 3
 visible = false
@@ -1064,7 +1066,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 script = ExtResource("11_ub5et")
 
-[node name="MarginContainer" type="MarginContainer" parent="Player/PauseFreeRoamMenu"]
+[node name="MarginContainer" type="MarginContainer" parent="Cars/Player/PauseFreeRoamMenu"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.009
@@ -1076,16 +1078,16 @@ offset_bottom = -220.36
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Player/PauseFreeRoamMenu/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Cars/Player/PauseFreeRoamMenu/MarginContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Player/PauseFreeRoamMenu/MarginContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Cars/Player/PauseFreeRoamMenu/MarginContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="CanvasLayer" type="CanvasLayer" parent="Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer"]
+[node name="CanvasLayer" type="CanvasLayer" parent="Cars/Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer"]
 visible = false
 
-[node name="Resume" type="Button" parent="Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer"]
+[node name="Resume" type="Button" parent="Cars/Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer"]
 offset_left = 390.0
 offset_top = 248.0
 offset_right = 890.0
@@ -1093,7 +1095,7 @@ offset_bottom = 346.0
 theme_override_font_sizes/font_size = 65
 text = "Resume"
 
-[node name="Settings" type="Button" parent="Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer"]
+[node name="Settings" type="Button" parent="Cars/Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer"]
 offset_left = 390.0
 offset_top = 350.0
 offset_right = 890.0
@@ -1102,7 +1104,7 @@ theme_override_font_sizes/font_size = 65
 text = "Settings
 "
 
-[node name="Quit" type="Button" parent="Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer"]
+[node name="Quit" type="Button" parent="Cars/Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer"]
 offset_left = 390.0
 offset_top = 452.0
 offset_right = 890.0
@@ -1110,7 +1112,7 @@ offset_bottom = 550.0
 theme_override_font_sizes/font_size = 65
 text = "Quit"
 
-[node name="WinScreen" type="Control" parent="Player"]
+[node name="WinScreen" type="Control" parent="Cars/Player"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 3
@@ -1123,7 +1125,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("13_owjwl")
 
-[node name="ColorRect" type="ColorRect" parent="Player/WinScreen"]
+[node name="ColorRect" type="ColorRect" parent="Cars/Player/WinScreen"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -1133,11 +1135,11 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.47072, 0.792544, 0.917102, 1)
 
-[node name="WinCanvasLayer" type="CanvasLayer" parent="Player/WinScreen"]
+[node name="WinCanvasLayer" type="CanvasLayer" parent="Cars/Player/WinScreen"]
 unique_name_in_owner = true
 visible = false
 
-[node name="TextureRect" type="TextureRect" parent="Player/WinScreen/WinCanvasLayer"]
+[node name="TextureRect" type="TextureRect" parent="Cars/Player/WinScreen/WinCanvasLayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1148,7 +1150,7 @@ grow_vertical = 2
 texture = ExtResource("14_f2yp5")
 expand_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Player/WinScreen/WinCanvasLayer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Cars/Player/WinScreen/WinCanvasLayer"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1161,7 +1163,7 @@ offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="WinLabel" type="Label" parent="Player/WinScreen/WinCanvasLayer/VBoxContainer"]
+[node name="WinLabel" type="Label" parent="Cars/Player/WinScreen/WinCanvasLayer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -1170,10 +1172,10 @@ theme_override_font_sizes/font_size = 48
 text = "You Win!"
 horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Player/WinScreen/WinCanvasLayer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Cars/Player/WinScreen/WinCanvasLayer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ScoreLabelForWin" type="Label" parent="Player/WinScreen/WinCanvasLayer/VBoxContainer"]
+[node name="ScoreLabelForWin" type="Label" parent="Cars/Player/WinScreen/WinCanvasLayer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -1182,10 +1184,10 @@ theme_override_font_sizes/font_size = 32
 text = "Template Score"
 horizontal_alignment = 1
 
-[node name="MarginContainer2" type="MarginContainer" parent="Player/WinScreen/WinCanvasLayer/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="Cars/Player/WinScreen/WinCanvasLayer/VBoxContainer"]
 layout_mode = 2
 
-[node name="PlayButton" type="Button" parent="Player/WinScreen/WinCanvasLayer/VBoxContainer"]
+[node name="PlayButton" type="Button" parent="Cars/Player/WinScreen/WinCanvasLayer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/outline_size = 8
@@ -1195,7 +1197,7 @@ theme_override_styles/pressed = ExtResource("15_dkctj")
 theme_override_styles/normal = ExtResource("15_dkctj")
 text = "Play"
 
-[node name="QuitButton" type="Button" parent="Player/WinScreen/WinCanvasLayer/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="Cars/Player/WinScreen/WinCanvasLayer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/outline_size = 8
@@ -2259,37 +2261,37 @@ transform = Transform3D(3.94974, 0, -0.632081, 0, 4, 0, 0.632081, 0, 3.94974, 33
 [node name="tree-log4" parent="." instance=ExtResource("38_ajfxe")]
 transform = Transform3D(1.84683, 0.116498, -3.54622, 0.0605834, 3.99622, 0.162833, 3.54761, -0.128891, 1.84332, 45.6191, 0.292739, 133.528)
 
-[connection signal="body_entered" from="Player/Area3D" to="Player" method="_on_area_3d_body_entered"]
-[connection signal="body_exited" from="Player/Area3D" to="Player" method="_on_area_3d_body_exited"]
-[connection signal="timeout" from="Player/DriverStarsCheckTimer" to="Player" method="_on_driver_stars_check_timer_timeout"]
-[connection signal="timeout" from="Player/CheckpointTimer" to="Player" method="_on_checkpoint_timer_timeout"]
-[connection signal="pressed" from="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/Resume" to="Player/PauseMenu" method="_on_resume_pressed"]
-[connection signal="pressed" from="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/Settings" to="Player/PauseMenu" method="_on_settings_pressed"]
-[connection signal="pressed" from="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/Quit" to="Player/PauseMenu" method="_on_quit_pressed"]
-[connection signal="pressed" from="Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer/Back" to="Player/PauseSettingsMenu" method="_on_back_pressed"]
-[connection signal="pressed" from="Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer/Resume" to="Player/PauseFreeRoamMenu" method="_on_resume_pressed"]
-[connection signal="pressed" from="Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer/Settings" to="Player/PauseFreeRoamMenu" method="_on_settings_pressed"]
-[connection signal="pressed" from="Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer/Quit" to="Player/PauseFreeRoamMenu" method="_on_quit_pressed"]
-[connection signal="pressed" from="Player/WinScreen/WinCanvasLayer/VBoxContainer/PlayButton" to="Player" method="_on_play_button_pressed"]
-[connection signal="pressed" from="Player/WinScreen/WinCanvasLayer/VBoxContainer/QuitButton" to="Player/WinScreen" method="_on_quit_button_pressed"]
-[connection signal="area_entered" from="Checkpoint/Area3D" to="Player" method="_on_area_3d_area_entered"]
-[connection signal="area_entered" from="DeliveryDepot/Checkpoint2/DeliveryDropoffArea3D" to="Player" method="_on_delivery_dropoff_area_3d_area_entered"]
-[connection signal="body_entered" from="Flag/FlagArea" to="Player" method="_on_flag_area_body_entered"]
+[connection signal="body_entered" from="Cars/Player/Area3D" to="Cars/Player" method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Cars/Player/Area3D" to="Cars/Player" method="_on_area_3d_body_exited"]
+[connection signal="timeout" from="Cars/Player/DriverStarsCheckTimer" to="Cars/Player" method="_on_driver_stars_check_timer_timeout"]
+[connection signal="timeout" from="Cars/Player/CheckpointTimer" to="Cars/Player" method="_on_checkpoint_timer_timeout"]
+[connection signal="pressed" from="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/Resume" to="Cars/Player/PauseMenu" method="_on_resume_pressed"]
+[connection signal="pressed" from="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/Settings" to="Cars/Player/PauseMenu" method="_on_settings_pressed"]
+[connection signal="pressed" from="Cars/Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/Quit" to="Cars/Player/PauseMenu" method="_on_quit_pressed"]
+[connection signal="pressed" from="Cars/Player/PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer/Back" to="Cars/Player/PauseSettingsMenu" method="_on_back_pressed"]
+[connection signal="pressed" from="Cars/Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer/Resume" to="Cars/Player/PauseFreeRoamMenu" method="_on_resume_pressed"]
+[connection signal="pressed" from="Cars/Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer/Settings" to="Cars/Player/PauseFreeRoamMenu" method="_on_settings_pressed"]
+[connection signal="pressed" from="Cars/Player/PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer/Quit" to="Cars/Player/PauseFreeRoamMenu" method="_on_quit_pressed"]
+[connection signal="pressed" from="Cars/Player/WinScreen/WinCanvasLayer/VBoxContainer/PlayButton" to="Cars/Player" method="_on_play_button_pressed"]
+[connection signal="pressed" from="Cars/Player/WinScreen/WinCanvasLayer/VBoxContainer/QuitButton" to="Cars/Player/WinScreen" method="_on_quit_button_pressed"]
+[connection signal="area_entered" from="Checkpoint/Area3D" to="Cars/Player" method="_on_area_3d_area_entered"]
+[connection signal="area_entered" from="DeliveryDepot/Checkpoint2/DeliveryDropoffArea3D" to="Cars/Player" method="_on_delivery_dropoff_area_3d_area_entered"]
+[connection signal="body_entered" from="Flag/FlagArea" to="Cars/Player" method="_on_flag_area_body_entered"]
 [connection signal="body_entered" from="Flag/FlagArea" to="Flag" method="_on_flag_area_body_entered"]
-[connection signal="body_entered" from="Flag2/FlagArea" to="Player" method="_on_flag_area_body_entered"]
+[connection signal="body_entered" from="Flag2/FlagArea" to="Cars/Player" method="_on_flag_area_body_entered"]
 [connection signal="body_entered" from="Flag2/FlagArea" to="Flag2" method="_on_flag_area_body_entered"]
-[connection signal="body_entered" from="Flag3/FlagArea" to="Player" method="_on_flag_area_body_entered"]
+[connection signal="body_entered" from="Flag3/FlagArea" to="Cars/Player" method="_on_flag_area_body_entered"]
 [connection signal="body_entered" from="Flag3/FlagArea" to="Flag3" method="_on_flag_area_body_entered"]
-[connection signal="body_entered" from="OrderFlag/OrderFlagArea" to="Player" method="_on_order_flag_area_body_entered"]
+[connection signal="body_entered" from="OrderFlag/OrderFlagArea" to="Cars/Player" method="_on_order_flag_area_body_entered"]
 [connection signal="body_entered" from="OrderFlag/OrderFlagArea" to="OrderFlag" method="_on_order_flag_area_body_entered"]
-[connection signal="body_entered" from="OrderFlag2/OrderFlagArea" to="Player" method="_on_order_flag_area_body_entered"]
+[connection signal="body_entered" from="OrderFlag2/OrderFlagArea" to="Cars/Player" method="_on_order_flag_area_body_entered"]
 [connection signal="body_entered" from="OrderFlag2/OrderFlagArea" to="OrderFlag2" method="_on_order_flag_area_body_entered"]
-[connection signal="body_entered" from="OrderFlag3/OrderFlagArea" to="Player" method="_on_order_flag_area_body_entered"]
+[connection signal="body_entered" from="OrderFlag3/OrderFlagArea" to="Cars/Player" method="_on_order_flag_area_body_entered"]
 [connection signal="body_entered" from="OrderFlag3/OrderFlagArea" to="OrderFlag3" method="_on_order_flag_area_body_entered"]
-[connection signal="body_entered" from="DropoffFlag/DropoffFlagArea" to="Player" method="_on_dropoff_flag_area_body_entered"]
-[connection signal="body_entered" from="DropoffFlag2/DropoffFlagArea" to="Player" method="_on_dropoff_flag_area_body_entered"]
+[connection signal="body_entered" from="DropoffFlag/DropoffFlagArea" to="Cars/Player" method="_on_dropoff_flag_area_body_entered"]
+[connection signal="body_entered" from="DropoffFlag2/DropoffFlagArea" to="Cars/Player" method="_on_dropoff_flag_area_body_entered"]
 [connection signal="body_entered" from="DropoffFlag2/DropoffFlagArea" to="DropoffFlag2" method="_on_dropoff_flag_area_body_entered"]
-[connection signal="body_entered" from="DropoffFlag3/DropoffFlagArea" to="Player" method="_on_dropoff_flag_area_body_entered"]
+[connection signal="body_entered" from="DropoffFlag3/DropoffFlagArea" to="Cars/Player" method="_on_dropoff_flag_area_body_entered"]
 [connection signal="body_entered" from="DropoffFlag3/DropoffFlagArea" to="DropoffFlag3" method="_on_dropoff_flag_area_body_entered"]
-[connection signal="body_entered" from="DropoffFlag4/DropoffFlagArea" to="Player" method="_on_dropoff_flag_area_body_entered"]
+[connection signal="body_entered" from="DropoffFlag4/DropoffFlagArea" to="Cars/Player" method="_on_dropoff_flag_area_body_entered"]
 [connection signal="body_entered" from="DropoffFlag4/DropoffFlagArea" to="DropoffFlag4" method="_on_dropoff_flag_area_body_entered"]
