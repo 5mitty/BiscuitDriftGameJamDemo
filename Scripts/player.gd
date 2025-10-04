@@ -4,7 +4,7 @@ var save_path = "user://player_data.save"
 var package_score = 0
 var package_scores = []
 var finished_time = 0.0
-var finished_times = []
+var finished_times: Array = []
 #var player_money = 1
 var player_money_total = 0
 var money_to_add_total = 0
@@ -111,16 +111,16 @@ func _physics_process(delta):
 	else:
 		if linear_velocity.length() > 5:
 			#engine_speed = lerp(engine_speed, force_input, delta * 0.75)
-			engine_speed = force_input / 1.5
+			engine_speed = force_input / 1.6
 		elif linear_velocity.length() > 10:
-			engine_speed = lerp(engine_speed, force_input, delta * 1)
+			engine_speed = force_input / 1.5
 		elif linear_velocity.length() > 20:
-			engine_speed = lerp(engine_speed, force_input, delta * 1.5)
+			engine_speed = force_input / 1.25
 		elif linear_velocity.length() > 25:
-			engine_speed = lerp(engine_speed, force_input, delta * 1.75)
+			engine_speed = force_input / 1.1
 		else:
-			#engine_speed = lerp(engine_speed, force_input, delta * 0.9)
-			engine_speed = force_input / 2
+			engine_speed = lerp(engine_speed, force_input, delta * 0.9)
+			#engine_speed = force_input / 2
 			
 		#engine_speed = force_input
 	#if Input.is_action_pressed("win_menu"):

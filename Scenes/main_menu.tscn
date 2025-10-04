@@ -340,6 +340,7 @@ size_flags_vertical = 4
 [node name="MoneyLabel" type="Label" parent="MoneyContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 20
 text = "MONEY: "
 
 [node name="MarginContainer4" type="MarginContainer" parent="."]
