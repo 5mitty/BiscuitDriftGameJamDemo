@@ -10,6 +10,7 @@ func _ready():
 	flag_area.area_entered.connect(_on_flag_area_body_entered)
 
 
+
 #func _on_flag_area_area_entered(area):
 	#pass
 
