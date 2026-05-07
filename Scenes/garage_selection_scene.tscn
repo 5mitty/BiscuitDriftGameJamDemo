@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cvvcev8jfkd1c"]
+[gd_scene load_steps=23 format=3 uid="uid://cvvcev8jfkd1c"]
 
 [ext_resource type="Material" uid="uid://e5dlah42jn35" path="res://Materials/gameCampGround.tres" id="1_7pyv3"]
 [ext_resource type="Script" uid="uid://dvbuopw4t5ept" path="res://Scenes/garage_selection_scene.gd" id="1_clqmu"]
@@ -12,6 +12,10 @@
 [ext_resource type="StyleBox" uid="uid://dexaofx6masv7" path="res://Materials/back_button_hover.tres" id="10_lxepi"]
 [ext_resource type="StyleBox" uid="uid://bjb1lav3ou1lj" path="res://Materials/back_button_normal.tres" id="10_rwkdw"]
 [ext_resource type="StyleBox" uid="uid://dnf1mb466ly72" path="res://Materials/back_button_normal2.tres" id="12_5ojv2"]
+[ext_resource type="PackedScene" uid="uid://dw2fq8k8wonqn" path="res://Scenes/road_curve_dirt.tscn" id="13_lqagv"]
+[ext_resource type="PackedScene" uid="uid://duil05bm4risq" path="res://Scenes/road_double_straight_dirt.tscn" id="14_6awfq"]
+[ext_resource type="PackedScene" uid="uid://bx6nme6047jlm" path="res://Scenes/road_curve_intersection_dirt.tscn" id="15_6awfq"]
+[ext_resource type="PackedScene" uid="uid://cqq03yx8lhmrv" path="res://Scenes/road_end_dirt.tscn" id="16_y04vw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_crsjj"]
 sky_top_color = Color(0.145545, 0.246072, 0.743515, 1)
@@ -58,7 +62,7 @@ transform = Transform3D(1, 0, 0, 0, -0.213474, 0.976949, 0, -0.976949, -0.213474
 [node name="Scene" type="Node3D" parent="."]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Scene"]
-transform = Transform3D(-2.13371e-07, 0, 3.83762, 0, 5.90961, 0, -4.88135, 0, -1.67748e-07, 30.0128, -2.91683, -64.9345)
+transform = Transform3D(-2.13371e-07, 0, 3.83762, 0, 5.90961, 0, -4.88135, 0, -1.67748e-07, 30.013, -2.95, -64.935)
 layers = 2
 use_collision = true
 collision_layer = 2
@@ -67,10 +71,11 @@ size = Vector3(80, 1, 80)
 material = ExtResource("1_7pyv3")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.995489, -0.0149902, 0.093681, -4.36234e-09, 0.987439, 0.158003, -0.0948727, 0.15729, -0.982985, 1.53825, 1.57868, -2.72425)
+transform = Transform3D(-0.995489, -0.0149901, 0.093681, -4.36234e-09, 0.987439, 0.158003, -0.0948727, 0.15729, -0.982985, 1.89332, 1.57868, -3.37038)
 fov = 80.0
 
 [node name="Cars" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.355068, 0, -0.646127)
 
 [node name="van" parent="Cars" instance=ExtResource("6_clqmu")]
 unique_name_in_owner = true
@@ -393,6 +398,45 @@ anchor_bottom = 1.0
 offset_left = -771.84
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="road-curve2" parent="." instance=ExtResource("13_lqagv")]
+transform = Transform3D(-3, 0, -2.62268e-07, 0, 3, 0, 2.62268e-07, 0, -3, -6, 0, 7)
+
+[node name="road-curve4" parent="." instance=ExtResource("13_lqagv")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 6, 0, 10)
+
+[node name="road-curve3" parent="." instance=ExtResource("13_lqagv")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -15, 0, -5)
+
+[node name="road-straight-dirt" parent="." instance=ExtResource("14_6awfq")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 8.5)
+
+[node name="road-straight-dirt7" parent="." instance=ExtResource("14_6awfq")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -3, 0, -0.5)
+
+[node name="road-curve5" parent="." instance=ExtResource("13_lqagv")]
+transform = Transform3D(-3, 0, -2.62268e-07, 0, 3, 0, 2.62268e-07, 0, -3, 9, 0, 22)
+
+[node name="road-straight-dirt3" parent="." instance=ExtResource("14_6awfq")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 15, 0, 23.5)
+
+[node name="road-straight-dirt4" parent="." instance=ExtResource("14_6awfq")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 21, 0, 23.5)
+
+[node name="road-straight-dirt5" parent="." instance=ExtResource("14_6awfq")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 27, 0, 23.5)
+
+[node name="road-straight-dirt6" parent="." instance=ExtResource("14_6awfq")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 33, 0, 23.5)
+
+[node name="road-straight-dirt2" parent="." instance=ExtResource("14_6awfq")]
+transform = Transform3D(-1.31134e-07, 0, -3, 0, 3, 0, 3, 0, -1.31134e-07, 7.50051, 0, 15.9697)
+
+[node name="road-curve-intersection" parent="." instance=ExtResource("15_6awfq")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -9, 0, 1)
+
+[node name="road-end" parent="." instance=ExtResource("16_y04vw")]
+transform = Transform3D(-3, 0, -2.62268e-07, 0, 3, 0, 2.62268e-07, 0, -3, 1, 0, -0.495472)
 
 [connection signal="pressed" from="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/VanButton" to="." method="_on_van_button_pressed"]
 [connection signal="pressed" from="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/TaxiButton" to="." method="_on_taxi_button_pressed"]

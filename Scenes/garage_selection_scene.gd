@@ -44,13 +44,13 @@ func _ready():
 		vehicle_selected = 1
 	elif vehicle_selected == 1:
 		_on_van_button_pressed()
-	elif vehicle_selected == 2:
+	elif vehicle_selected == 2 && taxi_purchased:
 		_on_taxi_button_pressed()
-	elif vehicle_selected == 3:
+	elif vehicle_selected == 3 && suv_purchased:
 		_on_suv_button_pressed()
-	elif vehicle_selected == 4:
+	elif vehicle_selected == 4 && lux_purchased:
 		_on_lux_button_pressed()
-	elif vehicle_selected == 5:
+	elif vehicle_selected == 5 && sedan_purchased:
 		_on_sedan_button_pressed()
 	print("Vehicles selected at start: " + str(vehicle_selected))
 

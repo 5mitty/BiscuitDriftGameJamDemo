@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqq03yx8lhmrv"]
+
+[ext_resource type="PackedScene" uid="uid://jo34l0nyaut2" path="res://Assets/City Kit - Roads/Models/FBX format/road-end.fbx" id="1_dtfq7"]
+[ext_resource type="Material" uid="uid://cho2i0d21c140" path="res://Materials/dirt.tres" id="2_7thni"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_wgj4n"]
+points = PackedVector3Array(-0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0.02, -0.5, 0.5, 0, -0.5, -0.5, 0.02, 0.5, 0.5, 0, 0.5, 0.5, 0.02, -0.5, 0.5, 0.02, 0.5)
+
+[node name="road-end" instance=ExtResource("1_dtfq7")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[node name="road-end" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_7thni")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0"]
+shape = SubResource("ConvexPolygonShape3D_wgj4n")

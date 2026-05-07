@@ -83,6 +83,7 @@ var current_time_left = ""
 @onready var first_gear_audio = %FirstGearAudio
 @onready var second_gear_audio = %SecondGearAudio
 @onready var third_gear_audio = %ThirdGearAudio
+var inGearNumber = 0
 
 @onready var Game = $".."
 @onready var flag = $"../Flag"
@@ -156,10 +157,16 @@ func _physics_process(delta):
 			##win_screen.hide()
 			##win_canvas_layer.hide()
 		#
-	if Input.is_action_pressed("ui_up"):
-		first_gear_audio.play()
+	if Input.is_action_just_pressed("ui_up"):
+		if inGearNumber == 0:
+			first_gear_audio.play()
+		inGearNumber += 1
 	else:
+		pass
+		
+	if Input.is_action_just_released("ui_up"):
 		first_gear_audio.stop()
+		inGearNumber = 0
 		
 	if Input.is_action_pressed("ui_cancel"):
 		_pause_menu()
@@ -676,27 +683,33 @@ func _display_selected_vehicle():
 		suv_body.hide()
 		lux_body.hide()
 		sedan_body.hide()
-	elif vehicle_selected == 2:
+	elif vehicle_selected == 2 && taxi_purchased:
 		van_body.hide()
 		taxi_body.show()
 		suv_body.hide()
 		lux_body.hide()
 		sedan_body.hide()
-	elif vehicle_selected == 3:
+	elif vehicle_selected == 3 && suv_purchased:
 		van_body.hide()
 		taxi_body.hide()
 		suv_body.show()
 		lux_body.hide()
 		sedan_body.hide()
-	elif vehicle_selected == 4:
+	elif vehicle_selected == 4 && lux_purchased:
 		van_body.hide()
 		taxi_body.hide()
 		suv_body.hide()
 		lux_body.show()
 		sedan_body.hide()
-	elif vehicle_selected == 5:
+	elif vehicle_selected == 5 && sedan_purchased:
 		van_body.hide()
 		taxi_body.hide()
 		suv_body.hide()
 		lux_body.hide()
 		sedan_body.show()
+	else:
+		van_body.show()
+		taxi_body.hide()
+		suv_body.hide()
+		lux_body.hide()
+		sedan_body.hide()

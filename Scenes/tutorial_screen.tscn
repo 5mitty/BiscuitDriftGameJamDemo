@@ -67,6 +67,16 @@ theme_override_font_sizes/font_size = 48
 text = "PICKUP ORDERS"
 horizontal_alignment = 1
 
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
 [node name="Label2" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
@@ -88,6 +98,14 @@ layout_mode = 2
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 48
 text = "PICKUP PACKAGES"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MarginContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
 
 [node name="Label3" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 custom_minimum_size = Vector2(100, 0)
@@ -111,6 +129,16 @@ theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 48
 text = "DELIVER"
 horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 20
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/MarginContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
 
 [node name="Label4" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
 custom_minimum_size = Vector2(250, 0)
