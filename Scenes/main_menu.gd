@@ -18,6 +18,7 @@ var main_game_scene: PackedScene
 func _ready():
 	main_game_scene = load("res://Scenes/gameLarge.tscn")
 	_load_data()
+	play_map_1_button.grab_focus()
 	if player_money_total:
 		money_label.text = "MONEY: " + str(player_money_total)
 	else:

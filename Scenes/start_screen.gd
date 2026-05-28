@@ -11,6 +11,7 @@ func _ready():
 	play_button.pressed.connect(_on_play_button_pressed)
 	tutorial_button.pressed.connect(_on_tutorial_button_pressed)
 	quit_button.pressed.connect(_on_quit_button_pressed)
+	play_button.grab_focus()
 
 
 func _on_play_button_pressed():

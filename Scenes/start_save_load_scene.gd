@@ -16,10 +16,8 @@ var player_money_total = 0
 @onready var new_save_button = %NewSaveButton
 @onready var back_button = %BackButton
 
-#func _ready():
-	#load_button.pressed.connect(_on_load_button_pressed)
-	#new_save_button.pressed.connect(_on_new_save_button_pressed)
-	#back_button.pressed.connect(_on_back_button_pressed)
+func _ready():
+	load_button.grab_focus()
 
 func _load_data():
 	if FileAccess.file_exists(save_path):

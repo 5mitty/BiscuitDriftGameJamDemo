@@ -1,5 +1,13 @@
 extends Node3D
 
+const CAR_STATS = {
+	1: {label="Van", speed="★★☆☆☆", drift="★★★★☆", handling="★★☆☆☆"},
+	2: {label="Taxi", speed="★★★☆☆", drift="★★★☆☆", handling="★★★☆☆"},
+	3: {label="SUV", speed="★★★☆☆", drift="★★☆☆☆", handling="★★☆☆☆"},
+	4: {label="Lux", speed="★★★★★", drift="★★★★☆", handling="★★★★☆"},
+	5: {label="Sedan", speed="★★★★☆", drift="★★★☆☆", handling="★★★★★"},
+}
+
 var save_path = "user://player_data.save"
 var start_save_load_scene = preload("res://Scenes/start_save_load_scene.tscn")
 var start_screen_scene = preload("res://Scenes/start_screen.tscn")
@@ -39,6 +47,7 @@ var vehicles_purchased = [van_purchased, taxi_purchased, suv_purchased, lux_purc
 
 func _ready():
 	_load_data()
+	van_button.grab_focus()
 	print("ONLOAD: " + str(vehicle_selected))
 	if vehicle_selected == null:
 		vehicle_selected = 1
@@ -54,12 +63,9 @@ func _ready():
 		_on_sedan_button_pressed()
 	print("Vehicles selected at start: " + str(vehicle_selected))
 
-func _physics_process(delta):
-	_load_data()
-	if player_money_total:
-		money_label.text = "MONEY: " + str(player_money_total)
-	else:
-		money_label.text = "MONEY: " + str(0)
+func _show_car_stats(id: int):
+	var s = CAR_STATS[id]
+	vehicle_price_label.text = "%s\nSpeed: %s\nDrift: %s\nHandling: %s" % [s.label, s.speed, s.drift, s.handling]
 
 func _save_and_load_data():
 	#package_score = _find_avg_package_health()
@@ -132,6 +138,7 @@ func _on_van_button_pressed():
 	vehicle_selected = 1
 	_save_data()
 	_load_data()
+	_show_car_stats(1)
 	van.show()
 	taxi.hide()
 	suv.hide()
@@ -149,7 +156,7 @@ func _on_taxi_button_pressed():
 	vehicle_selected = 2
 	_save_data()
 	_load_data()
-	print("loaded selection: " + str(vehicle_selected))
+	_show_car_stats(2)
 	van.hide()
 	taxi.show()
 	suv.hide()
@@ -168,7 +175,7 @@ func _on_suv_button_pressed():
 	vehicle_selected = 3
 	_save_data()
 	_load_data()
-	print("loaded selection: " + str(vehicle_selected))
+	_show_car_stats(3)
 	van.hide()
 	taxi.hide()
 	suv.show()
@@ -187,7 +194,7 @@ func _on_lux_button_pressed():
 	vehicle_selected = 4
 	_save_data()
 	_load_data()
-	print("loaded selection: " + str(vehicle_selected))
+	_show_car_stats(4)
 	van.hide()
 	taxi.hide()
 	suv.hide()
@@ -206,7 +213,7 @@ func _on_sedan_button_pressed():
 	vehicle_selected = 5
 	_save_data()
 	_load_data()
-	print("loaded selection: " + str(vehicle_selected))
+	_show_car_stats(5)
 	van.hide()
 	taxi.hide()
 	suv.hide()

@@ -8,11 +8,10 @@ extends Control
 @onready var quit = %Quit
 
 func _ready():
-	# Connect button signals if you haven't already in the editor
-	#resume.pressed.connect(_on_resume_pressed)
-	#settings.pressed.connect(_on_settings_pressed)
-	#quit.pressed.connect(_on_quit_pressed)
 	pass
+
+func grab_initial_focus():
+	resume.grab_focus()
 	
 
 

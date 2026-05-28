@@ -30,7 +30,38 @@ var steer_text_from_int = ""
 var force_input = 0.0
 var engine_speed = 0.0
 var force_display = 0.0
-var handbrake_strength = 2.0
+var handbrake_strength = 15.0
+@export var drift_friction: float = 1.2
+@export var normal_back_friction: float = 2.8
+var is_drifting: bool = false
+
+const CAR_STATS = {
+	1: {engine=350, steer=0.7,  drift_f=1.3,  normal_f=2.8, label="Van — Heavy. Wide drifts."},
+	2: {engine=420, steer=0.85, drift_f=1.1,  normal_f=2.8, label="Taxi — Balanced. Easy to drift."},
+	3: {engine=380, steer=0.65, drift_f=1.4,  normal_f=3.2, label="SUV — Grippy. Hard to break loose."},
+	4: {engine=500, steer=0.9,  drift_f=1.0,  normal_f=2.5, label="Lux — Fast. Loose. Expert only."},
+	5: {engine=460, steer=0.95, drift_f=1.05, normal_f=2.6, label="Sedan — Nimble. Twitchy."},
+}
+
+var drift_score_total: float = 0.0
+var drift_pending: float = 0.0
+var drift_combo_multiplier: int = 1
+var drift_sustained_time: float = 0.0
+var _current_drift_angle: float = 0.0
+var _actively_drifting: bool = false
+var _all_wheels_off: bool = false
+var _is_airtime: bool = false
+var _cached_speed: float = 0.0
+var _last_driving_score: float = 500.0
+var drift_bar: ProgressBar
+
+@export var sfx_crash: AudioStream
+@export var sfx_order_pickup: AudioStream
+@export var sfx_delivery_pickup: AudioStream
+@export var sfx_package_delivered: AudioStream
+var _sfx_player: AudioStreamPlayer
+var _prev_speed: float = 0.0
+var _crash_cooldown: float = 0.0
 
 @onready var camera_pivot = $CameraPivot
 @onready var camera_3d = $CameraPivot/Camera3D
@@ -111,10 +142,15 @@ func _ready():
 	countdown_timer.wait_time = countdown_duration
 	countdown_timer.start()
 	driver_stars = _player_score_to_driver_stars(player_score_from_road)
+	_build_drift_bar()
 	flag_count_label.text = ""
 	order_count_label.text = "No Orders Yet"
-	displayMessage("Collect all orders in the neighborhood", 4)
 	_display_selected_vehicle()
+	_apply_car_stats()
+	displayMessage("Stay on road — packages take damage off-road!", 5)
+	_sfx_player = AudioStreamPlayer.new()
+	_sfx_player.bus = "SFX"
+	add_child(_sfx_player)
 	
 func _physics_process(delta):
 	camera_pivot.global_position = camera_pivot.global_position.lerp(global_position, delta * CAMERA_FOLLOW_SPEED)
@@ -123,28 +159,17 @@ func _physics_process(delta):
 	steer_input = Input.get_axis("ui_right", "ui_left") * MAX_STEER
 	#steer_amount = lerp(steer_amount, steer_input, delta * 8)
 	steering = move_toward(steering, steer_input, delta * 2.5)
-	force_input = Input.get_axis("ui_down", "ui_up") * ENGINE_POWER
-	#back_left.engine_force = force_input
-	#back_right.engine_force = force_input
-	
-	if linear_velocity.length() > 25 || Input.is_action_pressed("handbrake"):
-		force_input = 0.0
-		engine_speed = 0.0
-	else:
-		if linear_velocity.length() > 5:
-			#engine_speed = lerp(engine_speed, force_input, delta * 0.75)
-			engine_speed = force_input / 1.6
-		elif linear_velocity.length() > 10:
-			engine_speed = force_input / 1.5
-		elif linear_velocity.length() > 20:
-			engine_speed = force_input / 1.25
-		elif linear_velocity.length() > 25:
-			engine_speed = force_input / 1.1
-		else:
-			engine_speed = lerp(engine_speed, force_input, delta * 0.9)
-			#engine_speed = force_input / 2
-			
-		#engine_speed = force_input
+	var throttle = Input.get_axis("ui_down", "ui_up")
+	var speed = linear_velocity.length()
+	_crash_cooldown = max(_crash_cooldown - delta, 0.0)
+	if _crash_cooldown <= 0.0 and _prev_speed > 8.0 and speed < _prev_speed * 0.45 and speed < 4.0:
+		_play_sfx(sfx_crash)
+		_crash_cooldown = 1.5
+	_prev_speed = speed
+	force_input = throttle * ENGINE_POWER
+	# Power tapers naturally with speed — strong pull off the line, hits a real top speed
+	var speed_ratio = clamp(speed / 30.0, 0.0, 1.0)
+	engine_speed = force_input * (1.0 - speed_ratio * 0.88)
 	#if Input.is_action_pressed("win_menu"):
 		#_pause_menu()
 		#if is_paused:
@@ -174,8 +199,7 @@ func _physics_process(delta):
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			get_tree().paused = true
 			pause_menu.canvas_layer.show()
-			#win_canvas_layer.show()
-			#win_screen.show()
+			pause_menu.grab_initial_focus()
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 			get_tree().paused = false
@@ -188,12 +212,56 @@ func _physics_process(delta):
 		#print("HIT A WALL OR SOMETHING")
 	
 	
-	if Input.is_action_pressed("handbrake"):
-		back_left.brake = handbrake_strength
-		back_right.brake = handbrake_strength
-		engine_force = 0
+	var local_vel = global_transform.basis.inverse() * linear_velocity
+	var is_sliding = abs(local_vel.x) > 4.0 and speed > 6.0
+	_current_drift_angle = abs(local_vel.x)
+	_actively_drifting = _current_drift_angle > 5.5 and (is_drifting or speed > 14.0)
+	_all_wheels_off = !front_left.is_in_contact() and !front_right.is_in_contact() and !back_left.is_in_contact() and !back_right.is_in_contact()
+	_cached_speed = speed
+	var rear_mid = (back_left.global_position + back_right.global_position) * 0.5
+
+	# Front grip increases with speed — resists spinning, keeps nose planted
+	var front_grip = 1.4 + clamp(speed / 20.0, 0.0, 0.8)
+	front_left.wheel_friction_slip = front_grip
+	front_right.wheel_friction_slip = front_grip
+	# Counter-spin: faster = stronger resistance to full rotation
+	var spin_damping = clamp(speed / 8.0, 0.2, 1.0)
+	apply_torque(Vector3(0, -angular_velocity.y * spin_damping * 12.0, 0))
+
+	var active_drift_friction = drift_friction + clamp((8.0 - speed) * 0.08, 0.0, 0.3) + clamp(speed / 22.0, 0.0, 0.55)
+	if Input.is_action_pressed("handbrake") and speed > 2.0:
+		back_left.brake = 0.0
+		back_right.brake = 0.0
+		back_left.wheel_friction_slip = active_drift_friction
+		back_right.wheel_friction_slip = active_drift_friction
+		engine_force = engine_speed * 0.5
+		is_drifting = true
+		if throttle != 0 and speed > 1.0:
+			var vel_dir = linear_velocity.normalized()
+			var face_dir = -global_transform.basis.z
+			var drive_dir = vel_dir.lerp(face_dir, 0.25)
+			apply_central_force(drive_dir * throttle * ENGINE_POWER * 1.0)
+	elif is_drifting and is_sliding:
+		back_left.brake = 0
+		back_right.brake = 0
+		back_left.wheel_friction_slip = active_drift_friction
+		back_right.wheel_friction_slip = active_drift_friction
+		engine_force = engine_speed * 0.5
+		if throttle != 0 and speed > 1.0:
+			var vel_dir = linear_velocity.normalized()
+			var face_dir = -global_transform.basis.z
+			var drive_dir = vel_dir.lerp(face_dir, 0.25)
+			apply_central_force(drive_dir * throttle * ENGINE_POWER * 1.0)
+		if throttle > 0.1:
+			var oversteer = -global_transform.basis.x * sign(local_vel.x) * throttle * ENGINE_POWER * 0.15
+			apply_force(oversteer, rear_mid - global_position)
 	else:
+		back_left.brake = 0
+		back_right.brake = 0
+		back_left.wheel_friction_slip = lerpf(back_left.wheel_friction_slip, normal_back_friction, delta * 3.0)
+		back_right.wheel_friction_slip = lerpf(back_right.wheel_friction_slip, normal_back_friction, delta * 3.0)
 		engine_force = engine_speed
+		is_drifting = false
 	
 	#steering_input = lerp(steering_input, )
 	
@@ -259,37 +327,52 @@ func _process(delta):
 		isInPickup = true
 	
 	
+	# Driving score (hidden — still drives package health)
 	if ray_cast_3d.player_on_road == true:
 		if player_score_from_road < 500:
-			player_score_from_road += 100 * (delta)
-			clamp(player_score_from_road, 0, 500)
-			if packages_collected:
-				scoreLabel.text = driver_stars + "/5 Package Health" + "\n" + str(int(player_score_from_road)) + " Driving Score"
-			else:
-				scoreLabel.text = "-/- Package Health" + "\n" + str(int(player_score_from_road)) + " Driving Score"
-			#scoreLabel.text = _player_score_to_driver_stars(player_score_from_road) + " Stars" + "\n" + str(int(player_score_from_road))
-		else:
-			if packages_collected:
-				scoreLabel.text = driver_stars + "/5 Package Health" + "\n" + str(int(player_score_from_road)) + " Driving Score"
-			else:
-				scoreLabel.text = "-/- Package Health" + "\n" + str(int(player_score_from_road)) + " Driving Score"
-	elif ray_cast_3d.player_on_road == false && player_score_from_road > 0:
+			player_score_from_road += 100 * delta
+	elif ray_cast_3d.player_on_road == false and player_score_from_road > 0:
 		if !is_paused && !hasFinishedDropoff:
-			player_score_from_road -= 50 * (delta)
-		if packages_collected:
-			scoreLabel.text = driver_stars + "/5 Package Health" + "\n" + str(int(player_score_from_road)) + " Driving Score"
-		else:
-			scoreLabel.text = "-/- Package Health" + "\n" + str(int(player_score_from_road)) + " Driving Score"
-	else:
-		if packages_collected:
-			scoreLabel.text = driver_stars + "/5 Package Health" + "\n" + str(int(player_score_from_road)) + " Driving Score"
-		else:
-			scoreLabel.text = "-/- Package Health" + "\n" + str(int(player_score_from_road)) + " Driving Score"
-		#+ str(int(player_score_from_road))
-	clamp(player_score_from_road, 0, 500)
+			player_score_from_road -= 50 * delta
+	player_score_from_road = clamp(player_score_from_road, 0, 500)
 	if player_score_from_road <= 0:
 		get_tree().reload_current_scene()
-		print("RELOAD SCENE")
+
+	# Package damage sound cue
+	if grabbedFirstPackage and player_score_from_road < _last_driving_score - 15.0:
+		displayMessage("⚠  Package taking damage!", 1.5)
+	_last_driving_score = player_score_from_road
+
+	# Drift / airtime score
+	if !is_paused and _all_wheels_off and _cached_speed > 3.0:
+		var pts = _cached_speed * delta * 2.0
+		drift_pending += pts
+		drift_bar.value = min(drift_pending, 35.0)
+		scoreLabel.text = "AIRTIME +%d" % int(drift_pending)
+		_is_airtime = true
+	elif !is_paused and _actively_drifting:
+		drift_sustained_time += delta
+		if drift_sustained_time >= 1.5:
+			drift_combo_multiplier = min(drift_combo_multiplier + 1, 8)
+			drift_sustained_time = 0.0
+		var pts = _current_drift_angle * _cached_speed * drift_combo_multiplier * delta * 0.5
+		drift_pending += pts
+		drift_bar.value = min(drift_pending, 35.0)
+		scoreLabel.text = "x%d DRIFT! +%d" % [drift_combo_multiplier, int(drift_pending)]
+		_is_airtime = false
+	else:
+		if drift_pending >= 35.0:
+			drift_score_total += drift_pending
+			if _is_airtime:
+				displayMessage("+%d AIRTIME!" % int(drift_pending), 2.0)
+			else:
+				displayMessage("+%d DRIFT POINTS!" % int(drift_pending), 2.0)
+		drift_pending = 0.0
+		drift_bar.value = 0.0
+		drift_combo_multiplier = 1
+		drift_sustained_time = 0.0
+		_is_airtime = false
+		scoreLabel.text = "DRIFT: %d" % int(drift_score_total)
 		
 	
 	steer_display = snapped(steering, 0.1)
@@ -301,25 +384,46 @@ func _process(delta):
 		steer_text_from_int = "Centered"
 	
 	#str(steer_display)
-	%ForceSteeringLabel.text = "Engine Speed: " + str(int(engine_speed)) + " Force: " + str(force_input) + " Steering: " + steer_text_from_int
+	%ForceSteeringLabel.text = ""
 	
 	if countdown_timer.is_stopped():
 		countdown_label.text = "0.0"
 		get_tree().reload_current_scene()
 		print("RELOAD SCENE")
 	else:
-		# Format the remaining time to one decimal place.
-		var minutes_left = int(countdown_timer.time_left) / 60
-		var seconds_left = int(countdown_timer.time_left) % 60
-		#var ms_left = countdown_timer.time_left - seconds_left
-		#+ str(ms_left).pad_decimals(1)
+		var time_left = countdown_timer.time_left
+		var minutes_left = int(time_left) / 60
+		var seconds_left = int(time_left) % 60
 		if seconds_left < 10:
 			countdown_label.text = "Time Left: " + str(minutes_left) + ":0" + str(seconds_left)
 		else:
 			countdown_label.text = "Time Left: " + str(minutes_left) + ":" + str(seconds_left)
-		#str(countdown_timer.time_left).pad_decimals(1)
-		
+
 		clamp(player_score_from_road, 0, 500)
+
+func _build_drift_bar():
+	var canvas = CanvasLayer.new()
+	add_child(canvas)
+	drift_bar = ProgressBar.new()
+	drift_bar.max_value = 35.0
+	drift_bar.value = 0.0
+	drift_bar.custom_minimum_size = Vector2(220, 22)
+	drift_bar.position = Vector2(20, 140)
+	drift_bar.show_percentage = false
+	canvas.add_child(drift_bar)
+
+func _play_sfx(stream: AudioStream):
+	if stream == null or _sfx_player == null:
+		return
+	_sfx_player.stream = stream
+	_sfx_player.play()
+
+func _apply_car_stats():
+	var stats = CAR_STATS.get(vehicle_selected, CAR_STATS[1])
+	ENGINE_POWER = stats.engine
+	MAX_STEER = stats.steer
+	drift_friction = stats.drift_f
+	normal_back_friction = stats.normal_f
 
 func _set_suspension(stiffnessFront, stiffnessBack):
 	front_left.suspension_stiffness = stiffnessFront
@@ -456,9 +560,9 @@ func _on_checkpoint_timer_timeout():
 	#area.queue_free()
 	
 func _flag_collected():
-	#print("entered flag area 3d")
 	flags_grabbed += 1
 	package_count += 1
+	_play_sfx(sfx_delivery_pickup)
 	if flags_grabbed > 0:
 		flag_count_label.text = "Packages: " + str(package_count)
 	else:
@@ -488,10 +592,9 @@ func _flag_collected():
 	current_package_health = packages_health_at_pickup
 	
 func _place_order_collected():
-	
 	orders_placed += 1
 	orders_placed_stored_var += 1
-	
+	_play_sfx(sfx_order_pickup)
 	if orders_placed > 0:
 		order_count_label.text = "Orders: " + str(orders_placed)
 	else:
@@ -501,6 +604,7 @@ func _dropoff_order():
 	print("YOOOOOOO")
 	if orders_placed && package_count > 0:
 		packages_delivered += 1
+		_play_sfx(sfx_package_delivered)
 		orders_placed -= 1
 		order_count_label.text = "Orders: " + str(orders_placed)
 		package_count -= 1
