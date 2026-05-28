@@ -34,6 +34,7 @@ var flag_respawn_points = []
 var dropoff_flags = []
 
 func _ready():
+	MusicManager.play_game_music($AudioStreamPlayer2D.stream)
 	flag_respawn_points = [flag_respawn_1, flag_respawn_2, flag_respawn_3]
 	dropoff_flags = [dropoff_flag_2, dropoff_flag_3, dropoff_flag_4]
 	_load_data()

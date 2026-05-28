@@ -7,7 +7,6 @@ extends Control
 @onready var quit_button = %QuitButton
 @onready var player = $".."
 const MAIN_MENU = preload("res://Scenes/main_menu.tscn")
-@export var game_large: PackedScene = preload("res://Scenes/gameLarge.tscn")
 const START_SCREEN = preload("res://Scenes/start_screen.tscn")
 
 func _ready():

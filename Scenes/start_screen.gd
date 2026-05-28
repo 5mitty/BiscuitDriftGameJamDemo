@@ -14,6 +14,7 @@ func _ready():
 
 
 func _on_play_button_pressed():
+	MusicManager.play_menu()
 	get_tree().change_scene_to_packed(start_save_load_scene)
 
 

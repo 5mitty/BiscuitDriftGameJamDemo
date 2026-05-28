@@ -12,10 +12,11 @@ var player_money_total = 0
 @onready var play_map_3_button = %PlayMap3Button
 @onready var quit_button = %QuitButton
 @onready var money_label = %MoneyLabel
-@export var main_game_scene: PackedScene = preload("res://Scenes/gameLarge.tscn")
+var main_game_scene: PackedScene
 @export var main_starting_screen_scene: PackedScene = preload("res://Scenes/start_screen.tscn")
 
 func _ready():
+	main_game_scene = load("res://Scenes/gameLarge.tscn")
 	_load_data()
 	if player_money_total:
 		money_label.text = "MONEY: " + str(player_money_total)
