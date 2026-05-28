@@ -47,6 +47,7 @@ var vehicles_purchased = [van_purchased, taxi_purchased, suv_purchased, lux_purc
 
 func _ready():
 	_load_data()
+	money_label.text = "MONEY: $" + str(player_money_total)
 	van_button.grab_focus()
 	print("ONLOAD: " + str(vehicle_selected))
 	if vehicle_selected == null:
@@ -133,6 +134,7 @@ func _on_vehicle_purchase_pressed(vehicle_price, vehicle_id):
 	else:
 		vehicle_purchase_button.text = "NEED $"
 	_save_data()
+	money_label.text = "MONEY: $" + str(player_money_total)
 
 func _on_van_button_pressed():
 	vehicle_selected = 1
@@ -245,6 +247,7 @@ func _on_debug_button_pressed():
 	player_money_total += 250
 	_save_data()
 	_load_data()
+	money_label.text = "MONEY: $" + str(player_money_total)
 
 func _on_next_button_pressed():
 	_save_data()
