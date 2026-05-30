@@ -56,6 +56,9 @@ var _last_driving_score: float = 500.0
 var drift_bar: ProgressBar
 var _drift_bar_fill: StyleBoxFlat
 var _drift_canvas: CanvasLayer
+var _minimap_drawer_ref: Control
+var _compass_drawer_ref: Control
+var current_game_phase: int = 0
 var _drift_mult_label: Label
 var _drift_mult_label_timer: float = 0.0
 var _drift_chain_grace: float = 0.0
@@ -186,6 +189,7 @@ func _build_minimap_ui():
 	minimap.player = self
 	minimap.flag_groups = flag_groups
 	minimap_marker.add_child(minimap)
+	_minimap_drawer_ref = minimap
 
 	compass_marker.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	compass_marker.offset_left = -compass_marker.size.x / 2.0
@@ -196,6 +200,22 @@ func _build_minimap_ui():
 	compass.player = self
 	compass.flag_groups = flag_groups
 	compass_marker.add_child(compass)
+	_compass_drawer_ref = compass
+
+func update_active_flags(orders: Array, pickups: Array, dropoffs: Array, depot: Array):
+	if orders.size() > 0:
+		current_game_phase = 0
+	elif pickups.size() > 0:
+		current_game_phase = 1
+	elif dropoffs.size() > 0:
+		current_game_phase = 2
+	else:
+		current_game_phase = 3
+	var groups = [orders, pickups, dropoffs, depot]
+	if _minimap_drawer_ref:
+		_minimap_drawer_ref.flag_groups = groups
+	if _compass_drawer_ref:
+		_compass_drawer_ref.flag_groups = groups
 
 func _on_tree_body_entered(body: Node):
 	if not is_instance_valid(body):
@@ -226,9 +246,10 @@ func _smash_tree(tree: Node):
 	particles.scale_amount_min = 0.2
 	particles.scale_amount_max = 0.5
 	particles.color = Color(0.25, 0.55, 0.15)
-	particles.global_position = tree.global_position
-	get_tree().root.add_child(particles)
+	var tree_pos = tree.global_position
 	tree.queue_free()
+	get_tree().root.add_child(particles)
+	particles.global_position = tree_pos
 	get_tree().create_timer(particles.lifetime + 0.5).timeout.connect(particles.queue_free)
 
 func _physics_process(delta):
@@ -423,8 +444,7 @@ func _process(delta):
 	else:
 		isInDropoff = false
 		
-	if orders_placed >= 3:
-		isInPickup = true
+	isInPickup = orders_placed >= 1
 	
 	
 	if ray_cast_3d.player_on_road == true:
@@ -709,6 +729,7 @@ func _flag_collected():
 	flags_grabbed += 1
 	package_count += 1
 	_play_sfx(sfx_delivery_pickup)
+	Game.on_pickup_collected()
 	if flags_grabbed > 0:
 		flag_count_label.text = "Packages: " + str(package_count)
 	else:
@@ -745,9 +766,9 @@ func _place_order_collected():
 		order_count_label.text = "Orders: " + str(orders_placed)
 	else:
 		order_count_label.text = "No Orders Yet"
+	Game.on_order_collected()
 		
 func _dropoff_order():
-	print("YOOOOOOO")
 	if orders_placed && package_count > 0:
 		packages_delivered += 1
 		_play_sfx(sfx_package_delivered)
@@ -755,23 +776,9 @@ func _dropoff_order():
 		order_count_label.text = "Orders: " + str(orders_placed)
 		package_count -= 1
 		flag_count_label.text = "Packages: " + str(package_count)
-		if packages_delivered == 3:
-			countdown_timer.paused = true
-			player_score_from_road = 500
-			hasFinishedDropoff = true
-			finished_time = countdown_timer.time_left
-			if finished_time <= 0.5:
-				displayMessage("WOW That Was Close!!\nDrive to the Delivery Depot in the woods", 4)
-			else:
-				displayMessage("Drive to the Delivery Depot in the woods", 4)
-			print("Finished Time: " + str(finished_time))
-	elif orders_placed_stored_var == 3 && packages_delivered == 2:
-		if orders_placed && package_count == 1:
-			checkpoint_label.text = "Nice Driving! Proceed back to the\n Delivery Depot in the woods"
-			checkpoint_timer.start()
+		Game.on_dropoff_collected()
 	else:
-		checkpoint_label.text = "You need an order and a package to deliver"
-		checkpoint_timer.start()
+		displayMessage("You need an order and a package to deliver", 2.0)
 		
 func displayMessage(text, time):
 	checkpoint_label.text = str(text)
@@ -779,17 +786,11 @@ func displayMessage(text, time):
 	checkpoint_timer.start()
 
 func _on_flag_area_body_entered(body):
-	if orders_placed >= 3:
+	if orders_placed >= 1:
 		_flag_collected()
 		grabbedFirstPackage = true
-		Game._spawn_flags()
-		#print(str(body.get_child()))
-		#print("Deleting: " + str(body))
-		#body.queue_free()
 	else:
-		checkpoint_label.text = "You need to get all orders first"
-		checkpoint_timer.wait_time = 2
-		checkpoint_timer.start()
+		displayMessage("You need to get an order first", 2.0)
 
 func _on_order_flag_area_body_entered(body):
 	_place_order_collected()
@@ -809,7 +810,12 @@ func _on_dropoff_flag_area_body_entered(body):
 
 
 func _on_delivery_dropoff_area_3d_area_entered(area):
+	if not Game.can_cash_out:
+		displayMessage("Complete 3 deliveries first to cash out!", 2.5)
+		return
 	print("DELIVERY DEPOT")
+	hasFinishedDropoff = true
+	finished_time = countdown_timer.time_left
 	win_canvas_layer.show()
 	_drift_canvas.hide()
 	if FileAccess.file_exists(save_path):

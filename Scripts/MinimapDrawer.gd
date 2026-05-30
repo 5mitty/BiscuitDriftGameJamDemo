@@ -49,13 +49,7 @@ func _draw():
 func _get_phase() -> int:
 	if not player:
 		return 0
-	if player.packages_delivered >= 3:
-		return 3
-	if player.flags_grabbed >= 3:
-		return 2
-	if player.orders_placed >= 3:
-		return 1
-	return 0
+	return player.current_game_phase
 
 func _phase_color(phase: int) -> Color:
 	match phase:
