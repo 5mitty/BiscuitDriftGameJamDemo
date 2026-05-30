@@ -45,7 +45,7 @@ const CAR_STATS = {
 
 var drift_score_total: float = 0.0
 var drift_pending: float = 0.0
-var drift_combo_multiplier: int = 1
+var drift_combo_multiplier: float = 1.0
 var drift_sustained_time: float = 0.0
 var _current_drift_angle: float = 0.0
 var _actively_drifting: bool = false
@@ -54,8 +54,17 @@ var _is_airtime: bool = false
 var _cached_speed: float = 0.0
 var _last_driving_score: float = 500.0
 var drift_bar: ProgressBar
+var _drift_bar_fill: StyleBoxFlat
+var _drift_canvas: CanvasLayer
+var _drift_mult_label: Label
+var _drift_mult_label_timer: float = 0.0
+var _drift_chain_grace: float = 0.0
+var _drift_end_timer: float = 0.0
+var _score_bonus_next: float = 50.0
+var _drift_elapsed: float = 0.0
 
 @export var sfx_crash: AudioStream
+@export var sfx_tree_crash: AudioStream
 @export var sfx_order_pickup: AudioStream
 @export var sfx_delivery_pickup: AudioStream
 @export var sfx_package_delivered: AudioStream
@@ -120,6 +129,13 @@ var inGearNumber = 0
 @onready var flag = $"../Flag"
 @onready var flag_2 = $"../Flag2"
 @onready var flag_3 = $"../Flag3"
+@onready var order_flag_1 = $"../OrderFlag"
+@onready var order_flag_2 = $"../OrderFlag2"
+@onready var order_flag_3 = $"../OrderFlag3"
+@onready var dropoff_flag_1 = $"../DropoffFlag2"
+@onready var dropoff_flag_2_node = $"../DropoffFlag3"
+@onready var dropoff_flag_3_node = $"../DropoffFlag4"
+@onready var delivery_depot = $"../Checkpoint2"
 @onready var win_screen = $WinScreen
 @onready var pause_menu = %PauseMenu
 @onready var pause_settings_menu = %PauseSettingsMenu
@@ -131,6 +147,8 @@ var main_menu = preload("res://Scenes/main_menu.tscn")
 var packages_collected = []
 var checkpoint_flags: Array = [flag, flag_2, flag_3]
 
+@onready var minimap_marker = %MiniMapMarker
+@onready var compass_marker = %CompassMarker
 @onready var van_body = %vanBody
 @onready var taxi_body = %taxiBody
 @onready var suv_body = %suvBody
@@ -138,6 +156,9 @@ var checkpoint_flags: Array = [flag, flag_2, flag_3]
 @onready var sedan_body = %sedanBody
 
 func _ready():
+	contact_monitor = true
+	max_contacts_reported = 6
+	body_entered.connect(_on_tree_body_entered)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	countdown_timer.wait_time = countdown_duration
 	countdown_timer.start()
@@ -151,14 +172,71 @@ func _ready():
 	_sfx_player = AudioStreamPlayer.new()
 	_sfx_player.bus = "SFX"
 	add_child(_sfx_player)
-	
+	_build_minimap_ui()
+
+func _build_minimap_ui():
+	var flag_groups = [
+		[order_flag_1, order_flag_2, order_flag_3],
+		[flag, flag_2, flag_3],
+		[dropoff_flag_1, dropoff_flag_2_node, dropoff_flag_3_node],
+		[delivery_depot],
+	]
+	var minimap_script := load("res://Scripts/MinimapDrawer.gd")
+	var minimap := minimap_script.new() as Control
+	minimap.player = self
+	minimap.flag_groups = flag_groups
+	minimap_marker.add_child(minimap)
+
+	compass_marker.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	compass_marker.offset_left = -compass_marker.size.x / 2.0
+	compass_marker.offset_right = compass_marker.size.x / 2.0
+
+	var compass_script := load("res://Scripts/CompassBar.gd")
+	var compass := compass_script.new() as Control
+	compass.player = self
+	compass.flag_groups = flag_groups
+	compass_marker.add_child(compass)
+
+func _on_tree_body_entered(body: Node):
+	if not is_instance_valid(body):
+		return
+	var parent = body.get_parent()
+	if not is_instance_valid(parent):
+		return
+	if not parent.name.to_lower().begins_with("tree-large"):
+		return
+	if linear_velocity.length() < 30.0 * 0.3:
+		return
+	_smash_tree(parent)
+
+func _smash_tree(tree: Node):
+	drift_score_total = max(drift_score_total - 500, 0)
+	_play_sfx(sfx_tree_crash)
+	var particles := CPUParticles3D.new()
+	particles.emitting = true
+	particles.one_shot = true
+	particles.explosiveness = 0.9
+	particles.amount = 24
+	particles.lifetime = 1.8
+	particles.initial_velocity_min = 4.0
+	particles.initial_velocity_max = 10.0
+	particles.direction = Vector3(0.0, 1.0, 0.0)
+	particles.spread = 70.0
+	particles.gravity = Vector3(0.0, -12.0, 0.0)
+	particles.scale_amount_min = 0.2
+	particles.scale_amount_max = 0.5
+	particles.color = Color(0.25, 0.55, 0.15)
+	particles.global_position = tree.global_position
+	get_tree().root.add_child(particles)
+	tree.queue_free()
+	get_tree().create_timer(particles.lifetime + 0.5).timeout.connect(particles.queue_free)
+
 func _physics_process(delta):
 	camera_pivot.global_position = camera_pivot.global_position.lerp(global_position, delta * CAMERA_FOLLOW_SPEED)
 	camera_pivot.transform = camera_pivot.transform.interpolate_with(transform, delta * 5.0)
 	#camera_pivot.look_at(global_position, camera_pivot.y)
 	steer_input = Input.get_axis("ui_right", "ui_left") * MAX_STEER
-	#steer_amount = lerp(steer_amount, steer_input, delta * 8)
-	steering = move_toward(steering, steer_input, delta * 2.5)
+	steering = lerp(steering, steer_input, delta * 7.0)
 	var throttle = Input.get_axis("ui_down", "ui_up")
 	var speed = linear_velocity.length()
 	_crash_cooldown = max(_crash_cooldown - delta, 0.0)
@@ -167,7 +245,6 @@ func _physics_process(delta):
 		_crash_cooldown = 1.5
 	_prev_speed = speed
 	force_input = throttle * ENGINE_POWER
-	# Power tapers naturally with speed — strong pull off the line, hits a real top speed
 	var speed_ratio = clamp(speed / 30.0, 0.0, 1.0)
 	engine_speed = force_input * (1.0 - speed_ratio * 0.88)
 	#if Input.is_action_pressed("win_menu"):
@@ -192,6 +269,9 @@ func _physics_process(delta):
 	if Input.is_action_just_released("ui_up"):
 		first_gear_audio.stop()
 		inGearNumber = 0
+
+	if Input.is_action_just_pressed("debug1"):
+		print("facing: x=" + str(snappedf(rad_to_deg(global_rotation.x), 0.1)) + " y=" + str(snappedf(rad_to_deg(global_rotation.y), 0.1)) + " z=" + str(snappedf(rad_to_deg(global_rotation.z), 0.1)))
 		
 	if Input.is_action_pressed("ui_cancel"):
 		_pause_menu()
@@ -215,47 +295,57 @@ func _physics_process(delta):
 	var local_vel = global_transform.basis.inverse() * linear_velocity
 	var is_sliding = abs(local_vel.x) > 4.0 and speed > 6.0
 	_current_drift_angle = abs(local_vel.x)
-	_actively_drifting = _current_drift_angle > 5.5 and (is_drifting or speed > 14.0)
+	_actively_drifting = _current_drift_angle > 2.0 and (is_drifting or speed > 10.0)
 	_all_wheels_off = !front_left.is_in_contact() and !front_right.is_in_contact() and !back_left.is_in_contact() and !back_right.is_in_contact()
 	_cached_speed = speed
 	var rear_mid = (back_left.global_position + back_right.global_position) * 0.5
 
-	# Front grip increases with speed — resists spinning, keeps nose planted
 	var front_grip = 1.4 + clamp(speed / 20.0, 0.0, 0.8)
 	front_left.wheel_friction_slip = front_grip
 	front_right.wheel_friction_slip = front_grip
-	# Counter-spin: faster = stronger resistance to full rotation
 	var spin_damping = clamp(speed / 8.0, 0.2, 1.0)
 	apply_torque(Vector3(0, -angular_velocity.y * spin_damping * 12.0, 0))
 
 	var active_drift_friction = drift_friction + clamp((8.0 - speed) * 0.08, 0.0, 0.3) + clamp(speed / 22.0, 0.0, 0.55)
 	if Input.is_action_pressed("handbrake") and speed > 2.0:
+		_drift_elapsed += delta
 		back_left.brake = 0.0
 		back_right.brake = 0.0
 		back_left.wheel_friction_slip = active_drift_friction
 		back_right.wheel_friction_slip = active_drift_friction
-		engine_force = engine_speed * 0.5
+		engine_force = engine_speed * 0.85
 		is_drifting = true
 		if throttle != 0 and speed > 1.0:
 			var vel_dir = linear_velocity.normalized()
 			var face_dir = -global_transform.basis.z
-			var drive_dir = vel_dir.lerp(face_dir, 0.25)
-			apply_central_force(drive_dir * throttle * ENGINE_POWER * 1.0)
+			var momentum_bias = clamp(speed / 25.0, 0.0, 1.0)
+			var steer_blend = lerp(0.18, 0.04, momentum_bias)
+			var drive_dir = vel_dir.lerp(face_dir, steer_blend)
+			apply_central_force(drive_dir * throttle * ENGINE_POWER * 1.15)
+		if throttle > 0.1:
+			var swing_scale = clamp(0.12 + _drift_elapsed * 0.12, 0.12, 0.4)
+			var oversteer = -global_transform.basis.x * sign(local_vel.x) * throttle * ENGINE_POWER * swing_scale
+			apply_force(oversteer, rear_mid - global_position)
 	elif is_drifting and is_sliding:
+		_drift_elapsed += delta
 		back_left.brake = 0
 		back_right.brake = 0
 		back_left.wheel_friction_slip = active_drift_friction
 		back_right.wheel_friction_slip = active_drift_friction
-		engine_force = engine_speed * 0.5
+		engine_force = engine_speed * 0.85
 		if throttle != 0 and speed > 1.0:
 			var vel_dir = linear_velocity.normalized()
 			var face_dir = -global_transform.basis.z
-			var drive_dir = vel_dir.lerp(face_dir, 0.25)
-			apply_central_force(drive_dir * throttle * ENGINE_POWER * 1.0)
+			var momentum_bias = clamp(speed / 25.0, 0.0, 1.0)
+			var steer_blend = lerp(0.18, 0.04, momentum_bias)
+			var drive_dir = vel_dir.lerp(face_dir, steer_blend)
+			apply_central_force(drive_dir * throttle * ENGINE_POWER * 1.15)
 		if throttle > 0.1:
-			var oversteer = -global_transform.basis.x * sign(local_vel.x) * throttle * ENGINE_POWER * 0.15
+			var swing_scale = clamp(0.12 + _drift_elapsed * 0.12, 0.12, 0.4)
+			var oversteer = -global_transform.basis.x * sign(local_vel.x) * throttle * ENGINE_POWER * swing_scale
 			apply_force(oversteer, rear_mid - global_position)
 	else:
+		_drift_elapsed = 0.0
 		back_left.brake = 0
 		back_right.brake = 0
 		back_left.wheel_friction_slip = lerpf(back_left.wheel_friction_slip, normal_back_friction, delta * 3.0)
@@ -298,8 +388,18 @@ func _physics_process(delta):
 		_set_suspension(120, 150)
 	elif linear_velocity.length() > 5 && !back_wheel_in_contact:
 		gravity_scale = 1.5
+		apply_torque(Vector3(
+			-angular_velocity.x * 18.0,
+			0.0,
+			-angular_velocity.z * 18.0
+		))
 	elif linear_velocity.length() > 10 && !back_wheel_in_contact:
 		gravity_scale = 2
+		apply_torque(Vector3(
+			-angular_velocity.x * 18.0,
+			0.0,
+			-angular_velocity.z * 18.0
+		))
 	else:
 		gravity_scale = 1
 		#angular_velocity = Vector3(0, 0, -10)
@@ -327,7 +427,6 @@ func _process(delta):
 		isInPickup = true
 	
 	
-	# Driving score (hidden — still drives package health)
 	if ray_cast_3d.player_on_road == true:
 		if player_score_from_road < 500:
 			player_score_from_road += 100 * delta
@@ -338,41 +437,62 @@ func _process(delta):
 	if player_score_from_road <= 0:
 		get_tree().reload_current_scene()
 
-	# Package damage sound cue
 	if grabbedFirstPackage and player_score_from_road < _last_driving_score - 15.0:
 		displayMessage("⚠  Package taking damage!", 1.5)
 	_last_driving_score = player_score_from_road
 
-	# Drift / airtime score
 	if !is_paused and _all_wheels_off and _cached_speed > 3.0:
 		var pts = _cached_speed * delta * 2.0
 		drift_pending += pts
 		drift_bar.value = min(drift_pending, 35.0)
-		scoreLabel.text = "AIRTIME +%d" % int(drift_pending)
+		_drift_bar_fill.bg_color = Color(0.2, 0.9, 0.3) if drift_pending >= 35.0 else Color(0.9, 0.7, 0.1)
+		scoreLabel.text = "Score: %d" % int(drift_score_total)
+		_drift_mult_label.visible = false
 		_is_airtime = true
 	elif !is_paused and _actively_drifting:
+		_drift_chain_grace = 2.5
+		_drift_end_timer = 0.0
 		drift_sustained_time += delta
-		if drift_sustained_time >= 1.5:
-			drift_combo_multiplier = min(drift_combo_multiplier + 1, 8)
+		if drift_sustained_time >= 0.75:
+			drift_combo_multiplier = min(drift_combo_multiplier + 0.25, 4.0)
 			drift_sustained_time = 0.0
-		var pts = _current_drift_angle * _cached_speed * drift_combo_multiplier * delta * 0.5
+		var pts = sqrt(_current_drift_angle) * _cached_speed * drift_combo_multiplier * delta * 0.9
 		drift_pending += pts
 		drift_bar.value = min(drift_pending, 35.0)
-		scoreLabel.text = "x%d DRIFT! +%d" % [drift_combo_multiplier, int(drift_pending)]
+		_drift_bar_fill.bg_color = Color(0.2, 0.9, 0.3) if drift_pending >= 35.0 else Color(0.9, 0.7, 0.1)
+		scoreLabel.text = "Score: %d" % int(drift_score_total)
+		if drift_combo_multiplier > 1.0:
+			_drift_mult_label.text = "x%.2f Drift Multiplier" % drift_combo_multiplier
+			if drift_pending >= 35.0 or _drift_mult_label.visible:
+				_drift_mult_label.visible = true
+				_drift_mult_label_timer = 2.0
 		_is_airtime = false
 	else:
-		if drift_pending >= 35.0:
-			drift_score_total += drift_pending
-			if _is_airtime:
-				displayMessage("+%d AIRTIME!" % int(drift_pending), 2.0)
-			else:
-				displayMessage("+%d DRIFT POINTS!" % int(drift_pending), 2.0)
-		drift_pending = 0.0
-		drift_bar.value = 0.0
-		drift_combo_multiplier = 1
-		drift_sustained_time = 0.0
-		_is_airtime = false
-		scoreLabel.text = "DRIFT: %d" % int(drift_score_total)
+		_drift_end_timer += delta
+		_drift_chain_grace -= delta
+		if _drift_chain_grace <= 0.0:
+			drift_combo_multiplier = 1.0
+			_drift_chain_grace = 0.0
+		if _drift_end_timer >= 0.3:
+			if drift_pending >= 35.0:
+				drift_score_total += drift_pending
+				while drift_score_total >= _score_bonus_next:
+					countdown_timer.start(countdown_timer.time_left + 2.0)
+					_score_bonus_next += 50.0
+				if _is_airtime:
+					displayMessage("+%d AIRTIME!" % int(drift_pending), 2.0)
+				else:
+					displayMessage("+%d DRIFT POINTS!" % int(drift_pending), 2.0)
+			drift_pending = 0.0
+			drift_bar.value = 0.0
+			_drift_bar_fill.bg_color = Color(0.9, 0.7, 0.1)
+			drift_sustained_time = 0.0
+			_is_airtime = false
+		scoreLabel.text = "Score: %d" % int(drift_score_total)
+		if _drift_mult_label_timer > 0.0:
+			_drift_mult_label_timer -= delta
+			if _drift_mult_label_timer <= 0.0:
+				_drift_mult_label.visible = false
 		
 	
 	steer_display = snapped(steering, 0.1)
@@ -402,7 +522,9 @@ func _process(delta):
 		clamp(player_score_from_road, 0, 500)
 
 func _build_drift_bar():
-	var canvas = CanvasLayer.new()
+	_drift_canvas = CanvasLayer.new()
+	_drift_canvas.layer = -1
+	var canvas = _drift_canvas
 	add_child(canvas)
 	drift_bar = ProgressBar.new()
 	drift_bar.max_value = 35.0
@@ -410,7 +532,31 @@ func _build_drift_bar():
 	drift_bar.custom_minimum_size = Vector2(220, 22)
 	drift_bar.position = Vector2(20, 140)
 	drift_bar.show_percentage = false
+	_drift_bar_fill = StyleBoxFlat.new()
+	_drift_bar_fill.bg_color = Color(0.9, 0.7, 0.1)
+	_drift_bar_fill.corner_radius_top_left = 6
+	_drift_bar_fill.corner_radius_top_right = 6
+	_drift_bar_fill.corner_radius_bottom_left = 6
+	_drift_bar_fill.corner_radius_bottom_right = 6
+	drift_bar.add_theme_stylebox_override("fill", _drift_bar_fill)
 	canvas.add_child(drift_bar)
+	_drift_mult_label = Label.new()
+	_drift_mult_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_drift_mult_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_drift_mult_label.anchor_left = 0.5
+	_drift_mult_label.anchor_right = 0.5
+	_drift_mult_label.anchor_top = 0.75
+	_drift_mult_label.anchor_bottom = 0.75
+	_drift_mult_label.offset_left = -150.0
+	_drift_mult_label.offset_right = 150.0
+	_drift_mult_label.offset_top = -20.0
+	_drift_mult_label.offset_bottom = 20.0
+	_drift_mult_label.add_theme_font_size_override("font_size", 28)
+	_drift_mult_label.add_theme_color_override("font_color", Color(0.2, 0.9, 0.3))
+	_drift_mult_label.add_theme_constant_override("outline_size", 8)
+	_drift_mult_label.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0))
+	_drift_mult_label.visible = false
+	canvas.add_child(_drift_mult_label)
 
 func _play_sfx(stream: AudioStream):
 	if stream == null or _sfx_player == null:
@@ -665,6 +811,7 @@ func _on_dropoff_flag_area_body_entered(body):
 func _on_delivery_dropoff_area_3d_area_entered(area):
 	print("DELIVERY DEPOT")
 	win_canvas_layer.show()
+	_drift_canvas.hide()
 	if FileAccess.file_exists(save_path):
 		print("WOAH THERE BUCKAROO")
 	_save_and_load_data()
@@ -675,22 +822,25 @@ func _on_delivery_dropoff_area_3d_area_entered(area):
 	#win_screen.score_label_for_win.text = ""
 	score_label_for_win.text = ""
 	if packages_delivered >= 2:
-		if float(packages_collected[1].package_health) >= 4.95:
+		var pkg_health = float(packages_collected[1].package_health)
+		var reward = int(drift_score_total * (pkg_health / 5.0))
+		var reward_line = "\nScore (%d) * Package Health (%.2f) = $%d" % [int(drift_score_total), pkg_health, reward]
+		if pkg_health >= 4.95:
 			print(packages_collected[1].name + " in Perfect Shape! Extremely Well Done!")
 			win_label.text = "Extremely Well Done!"
-			score_label_for_win.text = "You delivered the packages in Perfect Shape!\n"
-		elif float(packages_collected[1].package_health) >= 4.5:
+			score_label_for_win.text = "You delivered the packages in Perfect Shape!" + reward_line
+		elif pkg_health >= 4.5:
 			print(packages_collected[1].name + " in Nice Shape! Well Done")
 			win_label.text = "Well Done"
-			score_label_for_win.text = "You delivered the packages in Nice Shape!\n"
-		elif float(packages_collected[1].package_health) >= 4.0:
+			score_label_for_win.text = "You delivered the packages in Nice Shape!" + reward_line
+		elif pkg_health >= 4.0:
 			print(packages_collected[1].name + " in Okay Shape")
 			win_label.text = "Deliveries Completed"
-			score_label_for_win.text = "You delivered the packages in Okay Shape\n"
+			score_label_for_win.text = "You delivered the packages in Okay Shape" + reward_line
 		else:
 			print(packages_collected[1].name + " in Bad Shape.")
 			win_label.text = "Deliveries Completed"
-			score_label_for_win.text = "Packages were in Bad Shape.\nTry Again for a better outcome"
+			score_label_for_win.text = "Packages were in Bad Shape.\nTry Again for a better outcome" + reward_line
 
 func _pause_menu():
 	is_paused = not is_paused
