@@ -10,7 +10,7 @@ const CAR_STATS = {
 
 var save_path = "user://player_data.save"
 var start_save_load_scene = preload("res://Scenes/start_save_load_scene.tscn")
-var start_screen_scene = preload("res://Scenes/start_screen.tscn")
+var start_screen_scene = preload("res://Scenes/start_screen_env.tscn")
 var main_menu_scene = preload("res://Scenes/main_menu.tscn")
 var package_score = 0
 var package_scores = []

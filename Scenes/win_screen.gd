@@ -7,7 +7,7 @@ extends Control
 @onready var quit_button = %QuitButton
 @onready var player = $".."
 const MAIN_MENU = preload("res://Scenes/main_menu.tscn")
-const START_SCREEN = preload("res://Scenes/start_screen.tscn")
+const START_SCREEN = preload("res://Scenes/start_screen_env.tscn")
 
 func _ready():
 	#play_button.pressed.connect(_on_play_button_pressed)

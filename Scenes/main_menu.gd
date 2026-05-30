@@ -13,7 +13,7 @@ var player_money_total = 0
 @onready var quit_button = %QuitButton
 @onready var money_label = %MoneyLabel
 var main_game_scene: PackedScene
-@export var main_starting_screen_scene: PackedScene = preload("res://Scenes/start_screen.tscn")
+@export var main_starting_screen_scene: PackedScene = preload("res://Scenes/start_screen_env.tscn")
 
 func _ready():
 	main_game_scene = load("res://Scenes/gameLarge.tscn")
@@ -51,8 +51,7 @@ func _delete_save_data():
 
 
 func _on_quit_button_pressed():
-	get_tree().change_scene_to_file("res://Scenes/start_screen.tscn")
-	#get_tree().quit()
+	get_tree().change_scene_to_file("res://Scenes/start_screen_env.tscn")
 
 
 func _on_play_map_1_button_pressed():
