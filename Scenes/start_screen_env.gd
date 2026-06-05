@@ -64,7 +64,7 @@ func _load_data():
 		var file = FileAccess.open(save_path, FileAccess.READ)
 		file.get_var() #package_scores
 		file.get_var() #finished_times
-		file.get_var() #player_money_total  
+		file.get_var() #player_money_total   
 		file.get_var() #van_purchased
 		file.get_var() #taxi_purchased
 		file.get_var() #suv_purchased
