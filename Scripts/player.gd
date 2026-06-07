@@ -162,7 +162,10 @@ func _ready():
 	contact_monitor = true
 	max_contacts_reported = 6
 	body_entered.connect(_on_tree_body_entered)
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if OS.get_name() == "Web":
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	countdown_timer.wait_time = countdown_duration
 	countdown_timer.start()
 	driver_stars = _player_score_to_driver_stars(player_score_from_road)
@@ -253,6 +256,32 @@ func _smash_tree(tree: Node):
 	get_tree().create_timer(particles.lifetime + 0.5).timeout.connect(particles.queue_free)
 
 func _physics_process(delta):
+	if Input.is_action_just_pressed("ui_cancel"):
+		var canvas_layer_node = pause_menu.get_node_or_null("MarginContainer/MarginContainer/CanvasLayer")
+		if not is_paused:
+			pause_menu.show()
+			if canvas_layer_node:
+				canvas_layer_node.visible = true
+			is_paused = true
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			if OS.get_name() == "Web":
+				Engine.time_scale = 0.0
+			else:
+				get_tree().paused = true
+		else:
+			pause_menu.hide()
+			if canvas_layer_node:
+				canvas_layer_node.visible = false
+			is_paused = false
+			if OS.get_name() == "Web":
+				Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+				Engine.time_scale = 1.0
+			else:
+				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+				get_tree().paused = false
+
+	if is_paused:
+		return
 	camera_pivot.global_position = camera_pivot.global_position.lerp(global_position, delta * CAMERA_FOLLOW_SPEED)
 	camera_pivot.transform = camera_pivot.transform.interpolate_with(transform, delta * 5.0)
 	#camera_pivot.look_at(global_position, camera_pivot.y)
@@ -293,20 +322,6 @@ func _physics_process(delta):
 
 	if Input.is_action_just_pressed("debug1"):
 		print("facing: x=" + str(snappedf(rad_to_deg(global_rotation.x), 0.1)) + " y=" + str(snappedf(rad_to_deg(global_rotation.y), 0.1)) + " z=" + str(snappedf(rad_to_deg(global_rotation.z), 0.1)))
-		
-	if Input.is_action_pressed("ui_cancel"):
-		_pause_menu()
-		if is_paused:
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			get_tree().paused = true
-			pause_menu.canvas_layer.show()
-			pause_menu.grab_initial_focus()
-		else:
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-			get_tree().paused = false
-			pause_menu.canvas_layer.hide()
-			#win_screen.hide()
-			#win_canvas_layer.show()
 		
 	#if linear_velocity.length() <= 0.2:
 		#engine_speed = min(engine_speed, 100)

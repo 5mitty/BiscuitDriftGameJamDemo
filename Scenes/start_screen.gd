@@ -20,10 +20,6 @@ func _ready():
 	if bg_texture:
 		bg_texture.hide()
 
-	play_button.pressed.connect(_on_play_button_pressed)
-	tutorial_button.pressed.connect(_on_tutorial_button_pressed)
-	quit_button.pressed.connect(_on_quit_button_pressed)
-
 	for btn in [play_button, tutorial_button, quit_button]:
 		btn.mouse_entered.connect(_on_button_hover)
 

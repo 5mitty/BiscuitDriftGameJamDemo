@@ -2,11 +2,10 @@ extends Control
 
 signal navigate(to: String)
 
-@onready var back_button = %BackButton
 @onready var next_button = %NextButton
 
 func _ready():
-	next_button.pressed.connect(_on_next_button_pressed)
+	pass
 
 func _on_back_button_pressed():
 	navigate.emit("start")

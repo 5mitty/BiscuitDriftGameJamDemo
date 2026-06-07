@@ -1,7 +1,6 @@
 extends Control
 
 @onready var player = $".."
-@onready var canvas_layer = %CanvasLayer
 @onready var settings_canvas_layer = %SettingsCanvasLayer
 
 var rebinding_action: String = ""
@@ -23,13 +22,15 @@ func _ready():
 	_build_settings_ui()
 
 func _build_settings_ui():
-	var vbox = $MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer
+	var vbox = settings_canvas_layer.get_node("VBoxContainer")
+	vbox.clip_contents = true
 
-	var placeholder = vbox.get_node_or_null("SettingsChange")
-	if placeholder:
-		placeholder.hide()
+	# Hide the old placeholder nodes
+	for n_name in ["SettingsChange", "MarginContainer", "MarginContainer2"]:
+		var n = vbox.get_node_or_null(n_name)
+		if n:
+			n.hide()
 
-	# Scroll container fills space between title and Back button
 	var scroll = ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -37,24 +38,21 @@ func _build_settings_ui():
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	vbox.add_child(scroll)
 
-	# Inner vbox holds all settings
 	var inner = VBoxContainer.new()
 	inner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	inner.add_theme_constant_override("separation", 10)
 	scroll.add_child(inner)
 
-	# Volume section
 	_add_section_label(inner, "VOLUME")
 	_add_slider(inner, "Master")
 	_add_slider(inner, "Music")
 	_add_slider(inner, "SFX")
 
-	# Keybinds section
 	_add_section_label(inner, "KEYBINDS")
 	for action in REBINDABLE:
 		_add_keybind_row(inner, action, REBINDABLE[action])
 
-	# Keep Back button at the bottom outside scroll
+	# Keep Back at the bottom
 	var back_btn = vbox.get_node_or_null("Back")
 	if back_btn:
 		vbox.move_child(back_btn, vbox.get_child_count() - 1)
@@ -74,38 +72,48 @@ func _add_slider(parent: Node, bus_name: String):
 
 	var row = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
+
 	var lbl = Label.new()
 	lbl.text = bus_name
 	lbl.custom_minimum_size = Vector2(80, 0)
+	lbl.add_theme_font_size_override("font_size", 26)
 
 	var slider = HSlider.new()
 	slider.min_value = -40.0
 	slider.max_value = 6.0
 	slider.step = 0.5
 	slider.value = current_db
+	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	slider.custom_minimum_size = Vector2(180, 0)
 	slider.value_changed.connect(_on_volume_changed.bind(bus_name))
 
 	var val_lbl = Label.new()
 	val_lbl.text = "%d db" % int(current_db)
 	val_lbl.custom_minimum_size = Vector2(55, 0)
-	slider.value_changed.connect(func(v): val_lbl.text = "%d db" % int(v))
+	val_lbl.add_theme_font_size_override("font_size", 26)
+	slider.value_changed.connect(_update_db_label.bind(val_lbl))
 
 	row.add_child(lbl)
 	row.add_child(slider)
 	row.add_child(val_lbl)
 	parent.add_child(row)
 
+func _update_db_label(value: float, label: Label):
+	label.text = "%d db" % int(value)
+
 func _add_keybind_row(parent: Node, action: String, label_text: String):
 	var row = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
+
 	var lbl = Label.new()
 	lbl.text = label_text
 	lbl.custom_minimum_size = Vector2(120, 0)
+	lbl.add_theme_font_size_override("font_size", 26)
 
 	var btn = Button.new()
 	btn.text = _get_key_label(action)
 	btn.custom_minimum_size = Vector2(120, 0)
+	btn.add_theme_font_size_override("font_size", 26)
 	btn.pressed.connect(_on_rebind_pressed.bind(action, btn))
 
 	row.add_child(lbl)
@@ -167,7 +175,6 @@ func _load_settings():
 	var cfg = ConfigFile.new()
 	if cfg.load(settings_path) != OK:
 		return
-	# Wipe any config saved before version 2 — it had bad keybind data
 	if cfg.get_value("meta", "version", 1) < 2:
 		cfg.clear()
 		cfg.set_value("meta", "version", 2)
@@ -194,7 +201,11 @@ func _on_back_pressed():
 	if rebinding_action != "":
 		rebind_buttons[rebinding_action].text = _get_key_label(rebinding_action)
 		rebinding_action = ""
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	player.is_paused = false
-	get_tree().paused = false
 	settings_canvas_layer.hide()
+	if OS.get_name() == "Web":
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+		Engine.time_scale = 1.0
+	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		get_tree().paused = false
+	player.is_paused = false

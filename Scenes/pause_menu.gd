@@ -25,13 +25,15 @@ func grab_initial_focus():
 		#push_warning("Pause Menu: Resume Button not found for initial focus!")
 
 func _on_resume_pressed():
-	#UIPauseMenu()
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	player.is_paused = false
-	get_tree().paused = false
 	canvas_layer.hide()
-	#canvas_layer.hide()
-	print("pressed Resume")
+	hide()
+	player.is_paused = false
+	if OS.get_name() == "Web":
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+		Engine.time_scale = 1.0
+	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		get_tree().paused = false
 
 func _on_settings_pressed():
 	canvas_layer.hide()
@@ -39,8 +41,9 @@ func _on_settings_pressed():
 
 
 func _on_quit_pressed():
-	print("pressed Quit")
-	get_tree().quit()
+	Engine.time_scale = 1.0
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://Scenes/garage_selection_scene.tscn")
 
 #func UIPauseMenu():
 	#print("UI_CANCEL pressed.")
