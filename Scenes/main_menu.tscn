@@ -1,25 +1,27 @@
-[gd_scene load_steps=13 format=3 uid="uid://btw54y0sttf72"]
+[gd_scene load_steps=16 format=3 uid="uid://btw54y0sttf72"]
 
 [ext_resource type="Script" uid="uid://cg3v64e4p68bs" path="res://Scenes/main_menu.gd" id="1_n45e2"]
 [ext_resource type="Texture2D" uid="uid://dhfp4jqeix8r1" path="res://Assets/Images/MainMenuBackgroundImage.png" id="2_cp0ys"]
+[ext_resource type="FontFile" uid="uid://bb5suhcrl4snu" path="res://Assets/Fonts/Rajdhani-Bold.ttf" id="3_16hvj"]
 [ext_resource type="Texture2D" uid="uid://cwetrpfwypgyu" path="res://Assets/Images/Map1MenuImage.png" id="3_opfnp"]
-[ext_resource type="StyleBox" uid="uid://cfafnory5c1hl" path="res://Materials/win_screen_button_gradient_pressed.tres" id="4_cp0ys"]
+[ext_resource type="StyleBox" path="res://themes/primary_hover.tres" id="4_cp0ys"]
 [ext_resource type="Texture2D" uid="uid://bmcmbtcfdfuru" path="res://Assets/Images/CampMapBiscuitDriftDemoImage.png" id="6_16hvj"]
-[ext_resource type="StyleBox" uid="uid://dt1pt8klc61hn" path="res://Materials/start_screen_play_normal.tres" id="6_trj04"]
+[ext_resource type="StyleBox" path="res://themes/primary_normal.tres" id="6_trj04"]
 [ext_resource type="Texture2D" uid="uid://dxm1ni26cxyrn" path="res://Assets/Images/Map1MenuImage2.png" id="7_cp0ys"]
-[ext_resource type="StyleBox" uid="uid://c762n4appv2e2" path="res://Materials/tutorial_screen_button_gradient_normal.tres" id="8_yhxw7"]
-[ext_resource type="StyleBox" uid="uid://c8p4l5ic6nsgu" path="res://Materials/garage_select.tres" id="9_trj04"]
+[ext_resource type="StyleBox" uid="uid://clq0ncf1voryx" path="res://themes/nav_normal.tres" id="8_yhxw7"]
+[ext_resource type="StyleBox" path="res://themes/primary_pressed.tres" id="9_trj04"]
+[ext_resource type="StyleBox" uid="uid://cep7ouovrcrvr" path="res://themes/nav_hover.tres" id="nav_h"]
+[ext_resource type="StyleBox" uid="uid://c1yf617ug85lb" path="res://themes/nav_pressed.tres" id="nav_p"]
 
-[sub_resource type="Gradient" id="Gradient_trj04"]
-offsets = PackedFloat32Array(0, 0.797814, 0.912568)
-colors = PackedColorArray(0.12508, 0.734789, 0.874891, 1, 0.822673, 0.947485, 0.980232, 1, 0.606649, 0.797867, 0.941974, 1)
+[sub_resource type="Gradient" id="Gradient_16hvj"]
+offsets = PackedFloat32Array(0, 0.101504, 1)
+colors = PackedColorArray(0.337255, 0.435294, 0.878431, 1, 0.498039, 0.552941, 0.956863, 1, 0.596078, 0.74902, 0.980392, 1)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_16hvj"]
-gradient = SubResource("Gradient_trj04")
-metadata/_snap_count = 44
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vr1f0"]
+gradient = SubResource("Gradient_16hvj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vr1f0"]
-texture = SubResource("GradientTexture2D_16hvj")
+texture = SubResource("GradientTexture2D_vr1f0")
 expand_margin_left = 5.0
 expand_margin_top = 5.0
 expand_margin_right = 5.0
@@ -87,6 +89,7 @@ layout_mode = 2
 [node name="MapSelect" type="Label" parent="MarginContainer3/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("3_16hvj")
 theme_override_font_sizes/font_size = 42
 text = "MAP SELECT"
 horizontal_alignment = 1
@@ -106,6 +109,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 text = "Suburbs"
 horizontal_alignment = 1
 
@@ -126,9 +130,9 @@ theme_override_constants/margin_bottom = 10
 [node name="PlayMap1Button" type="Button" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/hover = ExtResource("4_cp0ys")
 theme_override_styles/pressed = ExtResource("6_trj04")
@@ -139,9 +143,12 @@ text = "PLAY"
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 text = "Race around the suburbs and deliver packages of biscuits from the food & business district"
 horizontal_alignment = 1
 autowrap_mode = 2
+
+[node name="Node" type="Node" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile/Label2"]
 
 [node name="MarginContainer3" type="MarginContainer" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile"]
 layout_mode = 2
@@ -158,6 +165,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2"]
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 text = "In Development"
 horizontal_alignment = 1
 
@@ -178,9 +186,9 @@ theme_override_constants/margin_bottom = 10
 [node name="PlayMap2Button" type="Button" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile2"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/hover = ExtResource("4_cp0ys")
 theme_override_styles/pressed = ExtResource("6_trj04")
@@ -191,6 +199,7 @@ text = "PLAY"
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 text = "Speed through camp to deliver packages of biscuits to hungry campers around the forest"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -211,6 +220,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 text = "In Development"
 horizontal_alignment = 1
 
@@ -231,9 +241,9 @@ theme_override_constants/margin_bottom = 10
 [node name="PlayMap3Button" type="Button" parent="MarginContainer3/VBoxContainer/HLevelSelectBox/MapSelectTile3"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/hover = ExtResource("4_cp0ys")
 theme_override_styles/pressed = ExtResource("6_trj04")
@@ -244,6 +254,7 @@ text = "PLAY"
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 text = "Speed through the city to deliver biscuits to hungry citizens around downtown"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -266,35 +277,34 @@ size_flags_vertical = 4
 [node name="QuitButton" type="Button" parent="MarginContainer3/VBoxContainer/HBoxContainer/QuitContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/hover = ExtResource("8_yhxw7")
-theme_override_styles/pressed = ExtResource("8_yhxw7")
+theme_override_styles/hover = ExtResource("nav_h")
+theme_override_styles/pressed = ExtResource("nav_p")
 theme_override_styles/normal = ExtResource("8_yhxw7")
 text = "BACK"
 
 [node name="LoadContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-offset_left = 70.0
-offset_top = 439.0
-offset_right = 230.0
-offset_bottom = 690.0
+offset_left = 59.0
+offset_top = 416.0
+offset_right = 219.0
+offset_bottom = 667.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="LoadButton" type="Button" parent="LoadContainer"]
 visible = false
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 24
-theme_override_styles/hover = ExtResource("8_yhxw7")
+theme_override_styles/hover = ExtResource("4_cp0ys")
 theme_override_styles/pressed = ExtResource("9_trj04")
-theme_override_styles/normal = ExtResource("9_trj04")
+theme_override_styles/normal = ExtResource("6_trj04")
 text = "LOAD"
 
 [node name="MarginContainer" type="MarginContainer" parent="LoadContainer"]
@@ -313,8 +323,11 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="Label" type="Label" parent="LoadContainer/MarginContainer/MarginContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_16hvj")
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxTexture_vr1f0")
 text = "Delivered
 Package Health
@@ -340,7 +353,8 @@ size_flags_vertical = 4
 [node name="MoneyLabel" type="Label" parent="MoneyContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3_16hvj")
+theme_override_font_sizes/font_size = 30
 text = "MONEY: "
 
 [node name="MarginContainer4" type="MarginContainer" parent="."]

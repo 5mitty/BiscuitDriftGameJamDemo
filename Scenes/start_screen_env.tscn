@@ -1,15 +1,27 @@
-[gd_scene load_steps=14 format=3 uid="uid://ysf8hswoplrr"]
+[gd_scene load_steps=27 format=3 uid="uid://ysf8hswoplrr"]
 
 [ext_resource type="Material" uid="uid://e5dlah42jn35" path="res://Materials/gameCampGround.tres" id="1_a4bsw"]
 [ext_resource type="Script" uid="uid://foscvx6dc1fs" path="res://Scenes/start_screen_env.gd" id="1_scidq"]
 [ext_resource type="PackedScene" uid="uid://duil05bm4risq" path="res://Scenes/road_double_straight_dirt.tscn" id="2_360hk"]
 [ext_resource type="PackedScene" uid="uid://cqq03yx8lhmrv" path="res://Scenes/road_end_dirt.tscn" id="3_5y46n"]
-[ext_resource type="PackedScene" uid="uid://b8w1ew75na45p" path="res://Scenes/start_screen.tscn" id="4_5y46n"]
 [ext_resource type="PackedScene" uid="uid://cfn56q3rcmkcu" path="res://Assets/Car Kit/Models/FBX format/van.fbx" id="4_cs647"]
 [ext_resource type="PackedScene" uid="uid://dvx47b8yg0sw7" path="res://Assets/Car Kit/Models/FBX format/taxi.fbx" id="5_scidq"]
 [ext_resource type="PackedScene" uid="uid://bjofsuoqcvqvc" path="res://Assets/Car Kit/Models/FBX format/suv.fbx" id="6_6tjfv"]
 [ext_resource type="PackedScene" uid="uid://c0ry1qowo34ev" path="res://Assets/Car Kit/Models/FBX format/suv-luxury.fbx" id="7_0r85f"]
 [ext_resource type="PackedScene" uid="uid://cxy1uj3rb13u" path="res://Assets/Car Kit/Models/FBX format/sedan.fbx" id="8_3rma4"]
+[ext_resource type="Script" uid="uid://mx2eklvw8uhe" path="res://Scenes/start_screen.gd" id="10_fxj87"]
+[ext_resource type="Texture2D" uid="uid://blvsoo6i78dtj" path="res://Assets/Images/StartScreenImage2.png" id="11_jkafk"]
+[ext_resource type="FontFile" uid="uid://bb5suhcrl4snu" path="res://Assets/Fonts/Rajdhani-Bold.ttf" id="12_3ytrc"]
+[ext_resource type="StyleBox" path="res://themes/primary_hover.tres" id="13_bo7y2"]
+[ext_resource type="StyleBox" path="res://themes/primary_pressed.tres" id="14_5lcko"]
+[ext_resource type="StyleBox" path="res://themes/primary_normal.tres" id="15_aihhu"]
+[ext_resource type="StyleBox" path="res://themes/secondary_hover.tres" id="16_uhr8m"]
+[ext_resource type="StyleBox" path="res://themes/secondary_pressed.tres" id="17_tu842"]
+[ext_resource type="StyleBox" path="res://themes/secondary_normal.tres" id="18_kxmxm"]
+[ext_resource type="StyleBox" path="res://themes/destructive_hover.tres" id="19_xosom"]
+[ext_resource type="StyleBox" path="res://themes/destructive_pressed.tres" id="20_naj1k"]
+[ext_resource type="StyleBox" path="res://themes/destructive_normal.tres" id="21_shg8i"]
+[ext_resource type="AudioStream" uid="uid://cqwednjn1wqji" path="res://Music/OST/ironM006 mel last min.wav" id="22_pdqpr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a4bsw"]
 sky_top_color = Color(0.145545, 0.246072, 0.743515, 1)
@@ -24,6 +36,10 @@ sky_material = SubResource("ProceduralSkyMaterial_a4bsw")
 background_mode = 2
 sky = SubResource("Sky_wrm1d")
 tonemap_mode = 2
+
+[sub_resource type="AudioStreamPlaylist" id="AudioStreamPlaylist_nqnrp"]
+stream_count = 1
+stream_0 = ExtResource("22_pdqpr")
 
 [node name="start_screen_env" type="Node3D"]
 script = ExtResource("1_scidq")
@@ -84,9 +100,180 @@ visible = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="StartScreen" parent="CanvasLayer" instance=ExtResource("4_5y46n")]
+[node name="StartScreen3" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("10_fxj87")
 
-[node name="TextureRect" parent="CanvasLayer/StartScreen" index="1"]
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/StartScreen3"]
 visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.641648, 0.459466, 0.796717, 1)
 
-[editable path="CanvasLayer/StartScreen"]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/StartScreen3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -49.0
+offset_bottom = 16.1757
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_jkafk")
+expand_mode = 5
+
+[node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/StartScreen3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/StartScreen3/MarginContainer3"]
+visible = false
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("12_3ytrc")
+theme_override_font_sizes/font_size = 42
+text = "BISCUIT DRIFT"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer"]
+layout_mode = 2
+
+[node name="PlayContainer" type="MarginContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_bottom = 5
+
+[node name="PlayButton" type="Button" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/PlayContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("12_3ytrc")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("13_bo7y2")
+theme_override_styles/pressed = ExtResource("14_5lcko")
+theme_override_styles/normal = ExtResource("15_aihhu")
+text = "PLAY"
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="TutorialContainer" type="MarginContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_bottom = 5
+
+[node name="TutorialButton" type="Button" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/TutorialContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("12_3ytrc")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("16_uhr8m")
+theme_override_styles/pressed = ExtResource("17_tu842")
+theme_override_styles/normal = ExtResource("18_kxmxm")
+text = "TUTORIAL"
+
+[node name="MarginContainer4" type="MarginContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="QuitContainer" type="MarginContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_bottom = 5
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/QuitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3529, 0.2667, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("12_3ytrc")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = ExtResource("19_xosom")
+theme_override_styles/pressed = ExtResource("20_naj1k")
+theme_override_styles/normal = ExtResource("21_shg8i")
+text = "QUIT"
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("12_3ytrc")
+text = "Developed by (5mitty) Jake Smith"
+horizontal_alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_bottom = 10
+
+[node name="Label2" type="Label" parent="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("12_3ytrc")
+text = "W to accelerate, A-D to steer, S to reverse, Space to Handbbrake"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Label3" type="Label" parent="CanvasLayer/StartScreen3/MarginContainer3"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("12_3ytrc")
+text = "v0.5.1 pre-alpha build"
+horizontal_alignment = 2
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="CanvasLayer/StartScreen3"]
+stream = SubResource("AudioStreamPlaylist_nqnrp")
+
+[connection signal="pressed" from="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/PlayContainer/PlayButton" to="CanvasLayer/StartScreen3" method="_on_play_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/TutorialContainer/TutorialButton" to="CanvasLayer/StartScreen3" method="_on_tutorial_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/StartScreen3/MarginContainer3/VBoxContainer/MarginContainer3/VBoxContainer/VBoxContainer2/QuitContainer/QuitButton" to="CanvasLayer/StartScreen3" method="_on_quit_button_pressed"]

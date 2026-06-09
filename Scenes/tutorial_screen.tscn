@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://cx01gycnukfad"]
+[gd_scene load_steps=7 format=3 uid="uid://cx01gycnukfad"]
 
 [ext_resource type="Script" uid="uid://c3v5pr6ond7gb" path="res://Scenes/tutorial_screen.gd" id="1_b7hhi"]
 [ext_resource type="Texture2D" uid="uid://c251ogtbdqyjd" path="res://Assets/Images/WinScreenimage.png" id="1_y8jer"]
-[ext_resource type="StyleBox" uid="uid://dq2wljw1e6f5e" path="res://Materials/tutorial_screen_button_gradient_pressed.tres" id="3_cd03v"]
+[ext_resource type="FontFile" uid="uid://bb5suhcrl4snu" path="res://Assets/Fonts/Rajdhani-Bold.ttf" id="3_elo14"]
+[ext_resource type="StyleBox" uid="uid://cep7ouovrcrvr" path="res://themes/nav_hover.tres" id="nh"]
+[ext_resource type="StyleBox" uid="uid://clq0ncf1voryx" path="res://themes/nav_normal.tres" id="nn"]
+[ext_resource type="StyleBox" uid="uid://c1yf617ug85lb" path="res://themes/nav_pressed.tres" id="np"]
 
 [node name="TutorialScreen" type="Control"]
 layout_mode = 3
@@ -45,6 +48,7 @@ alignment = 1
 [node name="Label" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_elo14")
 theme_override_font_sizes/font_size = 64
 text = "HOW TO PLAY"
 horizontal_alignment = 1
@@ -63,6 +67,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_elo14")
 theme_override_font_sizes/font_size = 48
 text = "PICKUP ORDERS"
 horizontal_alignment = 1
@@ -81,6 +86,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_elo14")
 theme_override_font_sizes/font_size = 42
 text = "First Collect Customer Orders"
 horizontal_alignment = 1
@@ -96,6 +102,7 @@ layout_mode = 2
 [node name="Label2" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_elo14")
 theme_override_font_sizes/font_size = 48
 text = "PICKUP PACKAGES"
 
@@ -111,6 +118,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_elo14")
 theme_override_font_sizes/font_size = 42
 text = "Collect packages for orders"
 horizontal_alignment = 1
@@ -126,6 +134,7 @@ layout_mode = 2
 [node name="Label3" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_elo14")
 theme_override_font_sizes/font_size = 48
 text = "DELIVER"
 horizontal_alignment = 1
@@ -144,6 +153,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_elo14")
 theme_override_font_sizes/font_size = 42
 text = "Return to Customers"
 horizontal_alignment = 1
@@ -156,6 +166,7 @@ layout_mode = 2
 [node name="Label2" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_elo14")
 theme_override_font_sizes/font_size = 48
 text = "DRIVE CRAZY AND PACKAGES WILL BE DAMAGED"
 horizontal_alignment = 1
@@ -174,13 +185,14 @@ size_flags_vertical = 4
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0.964742, 0.964742, 0.964742, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.102, 0.2275, 0.4157, 1)
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_elo14")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/hover = ExtResource("3_cd03v")
-theme_override_styles/pressed = ExtResource("3_cd03v")
-theme_override_styles/normal = ExtResource("3_cd03v")
-text = "Next
+theme_override_styles/hover = ExtResource("nh")
+theme_override_styles/pressed = ExtResource("np")
+theme_override_styles/normal = ExtResource("nn")
+text = "Back
 "
 
 [connection signal="pressed" from="MarginContainer/MarginContainer/VBoxContainer/NextContainer/NextButton" to="." method="_on_next_button_pressed"]

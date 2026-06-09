@@ -1,12 +1,17 @@
-[gd_resource type="StyleBoxTexture" load_steps=3 format=3 uid="uid://dt1pt8klc61hn"]
-
-[sub_resource type="Gradient" id="Gradient_l5sol"]
-offsets = PackedFloat32Array(0, 0.797814, 0.912568)
-colors = PackedColorArray(0.428569, 0.89009, 0.456924, 1, 0.881935, 0.881938, 0.881936, 1, 0.99772, 0.75035, 1, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_a00f1"]
-gradient = SubResource("Gradient_l5sol")
-metadata/_snap_count = 44
+[gd_resource type="StyleBoxFlat" format=3 uid="uid://dt1pt8klc61hn"]
 
 [resource]
-texture = SubResource("GradientTexture2D_a00f1")
+bg_color = Color(0.05, 0.05, 0.06, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.35, 0.4, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0

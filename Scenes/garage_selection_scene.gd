@@ -45,6 +45,10 @@ var vehicles_purchased = [van_purchased, taxi_purchased, suv_purchased, lux_purc
 @onready var vehicle_price_label = %VehiclePriceLabel
 @onready var vehicle_purchase_button = %VehiclePurchaseButton
 
+func _unhandled_input(event: InputEvent):
+	if event.is_action_pressed("ui_cancel"):
+		_on_back_button_pressed()
+
 func _ready():
 	_load_data()
 	money_label.text = "MONEY: $" + str(player_money_total)
@@ -255,4 +259,6 @@ func _on_next_button_pressed():
 	get_tree().change_scene_to_packed(main_menu_scene)
 
 func _on_back_button_pressed():
-	get_tree().change_scene_to_packed(start_screen_scene)
+	#get_tree().change_scene_to_packed(main_menu_scene)
+	get_tree().change_scene_to_file("res://Scenes/start_screen_env.tscn")
+	

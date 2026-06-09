@@ -10,6 +10,10 @@ extends Control
 func _ready():
 	pass
 
+func _unhandled_input(event: InputEvent):
+	if event.is_action_pressed("ui_cancel") and visible:
+		_on_resume_pressed()
+
 func grab_initial_focus():
 	resume.grab_focus()
 	

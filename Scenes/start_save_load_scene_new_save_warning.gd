@@ -12,6 +12,14 @@ var player_money_total = 0
 @onready var new_save_button = %NewSaveButton
 @onready var back_button = %BackButton
 
+func _ready():
+	visibility_changed.connect(func():
+		if visible: new_save_button.grab_focus())
+
+func _unhandled_input(event: InputEvent):
+	if event.is_action_pressed("ui_cancel"):
+		_on_back_button_pressed()
+
 func _load_data():
 	if FileAccess.file_exists(save_path):
 		var file = FileAccess.open(save_path, FileAccess.READ)

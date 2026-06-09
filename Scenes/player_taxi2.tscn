@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=4 uid="uid://b1aq3pee7pw10"]
+[gd_scene load_steps=90 format=4 uid="uid://b1aq3pee7pw10"]
 
 [ext_resource type="Script" uid="uid://dtcvoi0oon8u8" path="res://Scripts/player.gd" id="1_4y3c1"]
 [ext_resource type="Texture2D" uid="uid://c1uf806r8icdp" path="res://Assets/Car Kit/Models/FBX format/taxi_0.png" id="2_ju8b1"]
@@ -10,8 +10,19 @@
 [ext_resource type="Script" uid="uid://wyjwnw6bhqt2" path="res://Scenes/pause_settings_menu.gd" id="7_6smlw"]
 [ext_resource type="Script" uid="uid://xywr11xdepsw" path="res://Scenes/win_screen.gd" id="8_46s6a"]
 [ext_resource type="Texture2D" uid="uid://c251ogtbdqyjd" path="res://Assets/Images/WinScreenimage.png" id="9_3bm68"]
-[ext_resource type="StyleBox" uid="uid://dis8spe4yfojt" path="res://Materials/win_screen_button_gradient_hover2.tres" id="10_b0aeo"]
 [ext_resource type="Texture2D" uid="uid://cy3g0qtlogyon" path="res://Assets/Car Kit/Models/FBX format/sedan_0.png" id="11_48gly"]
+[ext_resource type="StyleBox" path="res://themes/primary_normal.tres" id="pn"]
+[ext_resource type="StyleBox" path="res://themes/primary_hover.tres" id="ph"]
+[ext_resource type="StyleBox" path="res://themes/primary_pressed.tres" id="pp"]
+[ext_resource type="StyleBox" path="res://themes/secondary_normal.tres" id="sn"]
+[ext_resource type="StyleBox" path="res://themes/secondary_hover.tres" id="sh"]
+[ext_resource type="StyleBox" path="res://themes/secondary_pressed.tres" id="sp"]
+[ext_resource type="StyleBox" path="res://themes/destructive_normal.tres" id="dn"]
+[ext_resource type="StyleBox" path="res://themes/destructive_hover.tres" id="dh"]
+[ext_resource type="StyleBox" path="res://themes/destructive_pressed.tres" id="dp"]
+[ext_resource type="StyleBox" path="res://themes/nav_normal.tres" id="nn"]
+[ext_resource type="StyleBox" path="res://themes/nav_hover.tres" id="nh"]
+[ext_resource type="StyleBox" path="res://themes/nav_pressed.tres" id="np"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ud8dr"]
 resource_name = "colormap"
@@ -1350,12 +1361,18 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 80
+theme_override_styles/hover = ExtResource("ph")
+theme_override_styles/pressed = ExtResource("pp")
+theme_override_styles/normal = ExtResource("pn")
 text = "Resume"
 
 [node name="Settings" type="Button" parent="PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 80
+theme_override_styles/hover = ExtResource("sh")
+theme_override_styles/pressed = ExtResource("sp")
+theme_override_styles/normal = ExtResource("sn")
 text = "Settings
 "
 
@@ -1363,6 +1380,10 @@ text = "Settings
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 80
+theme_override_colors/font_color = Color(0.3529, 0.2667, 0.0, 1)
+theme_override_styles/hover = ExtResource("dh")
+theme_override_styles/pressed = ExtResource("dp")
+theme_override_styles/normal = ExtResource("dn")
 text = "Quit"
 
 [node name="PauseSettingsMenu" type="Control" parent="."]
@@ -1436,6 +1457,10 @@ theme_override_constants/margin_top = 10
 [node name="Back" type="Button" parent="PauseSettingsMenu/MarginContainer/MarginContainer/SettingsCanvasLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 65
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/hover = ExtResource("nh")
+theme_override_styles/pressed = ExtResource("np")
+theme_override_styles/normal = ExtResource("nn")
 text = "Back"
 
 [node name="PauseFreeRoamMenu" type="Control" parent="."]
@@ -1481,6 +1506,9 @@ offset_top = 248.0
 offset_right = 890.0
 offset_bottom = 346.0
 theme_override_font_sizes/font_size = 65
+theme_override_styles/hover = ExtResource("ph")
+theme_override_styles/pressed = ExtResource("pp")
+theme_override_styles/normal = ExtResource("pn")
 text = "Resume"
 
 [node name="Settings" type="Button" parent="PauseFreeRoamMenu/MarginContainer/MarginContainer/VBoxContainer/CanvasLayer"]
@@ -1489,6 +1517,9 @@ offset_top = 350.0
 offset_right = 890.0
 offset_bottom = 448.0
 theme_override_font_sizes/font_size = 65
+theme_override_styles/hover = ExtResource("sh")
+theme_override_styles/pressed = ExtResource("sp")
+theme_override_styles/normal = ExtResource("sn")
 text = "Settings
 "
 
@@ -1498,6 +1529,10 @@ offset_top = 452.0
 offset_right = 890.0
 offset_bottom = 550.0
 theme_override_font_sizes/font_size = 65
+theme_override_colors/font_color = Color(0.3529, 0.2667, 0.0, 1)
+theme_override_styles/hover = ExtResource("dh")
+theme_override_styles/pressed = ExtResource("dp")
+theme_override_styles/normal = ExtResource("dn")
 text = "Quit"
 
 [node name="WinScreen" type="Control" parent="."]
@@ -1580,9 +1615,9 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 32
-theme_override_styles/hover = ExtResource("10_b0aeo")
-theme_override_styles/pressed = ExtResource("10_b0aeo")
-theme_override_styles/normal = ExtResource("10_b0aeo")
+theme_override_styles/hover = ExtResource("ph")
+theme_override_styles/pressed = ExtResource("pp")
+theme_override_styles/normal = ExtResource("pn")
 text = "Play"
 
 [node name="QuitButton" type="Button" parent="WinScreen/WinCanvasLayer/VBoxContainer"]
@@ -1590,9 +1625,13 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 32
-theme_override_styles/hover = ExtResource("10_b0aeo")
-theme_override_styles/pressed = ExtResource("10_b0aeo")
-theme_override_styles/normal = ExtResource("10_b0aeo")
+theme_override_styles/hover = ExtResource("dh")
+theme_override_styles/pressed = ExtResource("dp")
+theme_override_styles/normal = ExtResource("dn")
+theme_override_colors/font_color = Color(0.3529, 0.2667, 0.0, 1)
+theme_override_styles/hover = ExtResource("dh")
+theme_override_styles/pressed = ExtResource("dp")
+theme_override_styles/normal = ExtResource("dn")
 text = "Quit"
 
 [node name="sedan" type="Node3D" parent="."]

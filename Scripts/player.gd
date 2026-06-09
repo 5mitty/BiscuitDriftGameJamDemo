@@ -65,6 +65,17 @@ var _drift_chain_grace: float = 0.0
 var _drift_end_timer: float = 0.0
 var _score_bonus_next: float = 50.0
 var _drift_elapsed: float = 0.0
+var _pulse_tween: Tween
+var _blink_tween: Tween
+var _drift_mult_tween: Tween
+var _vignette_rect: ColorRect
+var _drift_flash_rect: ColorRect
+var _prev_drift_mult: float = 1.0
+var _timer_zone: int = -1
+var _time_header_label: Label
+var _drift_header_label: Label
+var _drift_left_label: Label
+var _drift_right_label: Label
 
 @export var sfx_crash: AudioStream
 @export var sfx_tree_crash: AudioStream
@@ -194,9 +205,18 @@ func _build_minimap_ui():
 	minimap_marker.add_child(minimap)
 	_minimap_drawer_ref = minimap
 
+	# Lock minimap to bottom-right corner at any screen size
+	minimap_marker.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	minimap_marker.offset_left   = -210.0
+	minimap_marker.offset_top    = -210.0
+	minimap_marker.offset_right  = -10.0
+	minimap_marker.offset_bottom = -10.0
+
 	compass_marker.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	compass_marker.offset_left = -compass_marker.size.x / 2.0
-	compass_marker.offset_right = compass_marker.size.x / 2.0
+	compass_marker.offset_left   = -251.0
+	compass_marker.offset_right  =  251.0
+	compass_marker.offset_top    =   35.0
+	compass_marker.offset_bottom =   73.0
 
 	var compass_script := load("res://Scripts/CompassBar.gd")
 	var compass := compass_script.new() as Control
@@ -256,13 +276,14 @@ func _smash_tree(tree: Node):
 	get_tree().create_timer(particles.lifetime + 0.5).timeout.connect(particles.queue_free)
 
 func _physics_process(delta):
-	if Input.is_action_just_pressed("ui_cancel"):
+	if Input.is_action_just_pressed("ui_cancel") and not Input.is_action_just_pressed("handbrake"):
 		var canvas_layer_node = pause_menu.get_node_or_null("MarginContainer/MarginContainer/CanvasLayer")
 		if not is_paused:
 			pause_menu.show()
 			if canvas_layer_node:
 				canvas_layer_node.visible = true
 			is_paused = true
+			pause_menu.grab_initial_focus()
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			if OS.get_name() == "Web":
 				Engine.time_scale = 0.0
@@ -480,7 +501,7 @@ func _process(delta):
 		var pts = _cached_speed * delta * 2.0
 		drift_pending += pts
 		drift_bar.value = min(drift_pending, 35.0)
-		_drift_bar_fill.bg_color = Color(0.2, 0.9, 0.3) if drift_pending >= 35.0 else Color(0.9, 0.7, 0.1)
+		_update_drift_bar_color()
 		scoreLabel.text = "Score: %d" % int(drift_score_total)
 		_drift_mult_label.visible = false
 		_is_airtime = true
@@ -494,10 +515,19 @@ func _process(delta):
 		var pts = sqrt(_current_drift_angle) * _cached_speed * drift_combo_multiplier * delta * 0.9
 		drift_pending += pts
 		drift_bar.value = min(drift_pending, 35.0)
-		_drift_bar_fill.bg_color = Color(0.2, 0.9, 0.3) if drift_pending >= 35.0 else Color(0.9, 0.7, 0.1)
+		_update_drift_bar_color()
 		scoreLabel.text = "Score: %d" % int(drift_score_total)
 		if drift_combo_multiplier > 1.0:
 			_drift_mult_label.text = "x%.2f Drift Multiplier" % drift_combo_multiplier
+			if drift_combo_multiplier != _prev_drift_mult:
+				_prev_drift_mult = drift_combo_multiplier
+				if _drift_mult_tween:
+					_drift_mult_tween.kill()
+				_drift_mult_tween = create_tween()
+				_drift_mult_tween.tween_property(_drift_mult_label, "scale", Vector2(1.3, 1.3), 0.05)
+				_drift_mult_tween.tween_property(_drift_mult_label, "scale", Vector2(1.0, 1.0), 0.1)
+			var _mt = clamp((drift_combo_multiplier - 1.0) / 3.0, 0.0, 1.0)
+			_drift_mult_label.add_theme_color_override("font_color", Color("#FFB300").lerp(Color("#FF2D2D"), _mt))
 			if drift_pending >= 35.0 or _drift_mult_label.visible:
 				_drift_mult_label.visible = true
 				_drift_mult_label_timer = 2.0
@@ -507,27 +537,37 @@ func _process(delta):
 		_drift_chain_grace -= delta
 		if _drift_chain_grace <= 0.0:
 			drift_combo_multiplier = 1.0
+			_prev_drift_mult = 1.0
 			_drift_chain_grace = 0.0
 		if _drift_end_timer >= 0.3:
 			if drift_pending >= 35.0:
 				drift_score_total += drift_pending
+				_trigger_drift_flash()
 				while drift_score_total >= _score_bonus_next:
 					countdown_timer.start(countdown_timer.time_left + 2.0)
 					_score_bonus_next += 50.0
 				if _is_airtime:
 					displayMessage("+%d AIRTIME!" % int(drift_pending), 2.0)
+					_show_popup("+%d AIRTIME!" % int(drift_pending), Color("#00CFFF"))
 				else:
 					displayMessage("+%d DRIFT POINTS!" % int(drift_pending), 2.0)
+					_show_popup("+%d DRIFT POINTS!" % int(drift_pending), Color("#00CFFF"))
 			drift_pending = 0.0
 			drift_bar.value = 0.0
-			_drift_bar_fill.bg_color = Color(0.9, 0.7, 0.1)
+			_drift_bar_fill.bg_color = Color("#e85555")
 			drift_sustained_time = 0.0
 			_is_airtime = false
 		scoreLabel.text = "Score: %d" % int(drift_score_total)
 		if _drift_mult_label_timer > 0.0:
 			_drift_mult_label_timer -= delta
 			if _drift_mult_label_timer <= 0.0:
-				_drift_mult_label.visible = false
+				if _drift_mult_tween:
+					_drift_mult_tween.kill()
+				_drift_mult_tween = create_tween()
+				_drift_mult_tween.tween_property(_drift_mult_label, "modulate:a", 0.0, 0.3)
+				_drift_mult_tween.tween_callback(func():
+					_drift_mult_label.visible = false
+					_drift_mult_label.modulate.a = 1.0)
 		
 	
 	steer_display = snapped(steering, 0.1)
@@ -550,9 +590,10 @@ func _process(delta):
 		var minutes_left = int(time_left) / 60
 		var seconds_left = int(time_left) % 60
 		if seconds_left < 10:
-			countdown_label.text = "Time Left: " + str(minutes_left) + ":0" + str(seconds_left)
+			countdown_label.text = "%d:%02d" % [minutes_left, seconds_left]
 		else:
-			countdown_label.text = "Time Left: " + str(minutes_left) + ":" + str(seconds_left)
+			countdown_label.text = "%d:%02d" % [minutes_left, seconds_left]
+		_update_timer_visual(time_left)
 
 		clamp(player_score_from_road, 0, 500)
 
@@ -592,6 +633,146 @@ func _build_drift_bar():
 	_drift_mult_label.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0))
 	_drift_mult_label.visible = false
 	canvas.add_child(_drift_mult_label)
+
+	# DRIFT bar labels
+	var _font = load("res://Assets/Fonts/Rajdhani-Bold.ttf")
+	_drift_header_label = Label.new()
+	_drift_header_label.text = "DRIFT"
+	_drift_header_label.add_theme_font_override("font", _font)
+	_drift_header_label.add_theme_font_size_override("font_size", 16)
+	_drift_header_label.add_theme_color_override("font_color", Color.WHITE)
+	_drift_header_label.add_theme_constant_override("outline_size", 2)
+	_drift_header_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	_drift_header_label.position = Vector2(108, 122)
+	canvas.add_child(_drift_header_label)
+
+	_drift_left_label = Label.new()
+	_drift_left_label.text = "STRAIGHT"
+	_drift_left_label.add_theme_font_override("font", _font)
+	_drift_left_label.add_theme_font_size_override("font_size", 13)
+	_drift_left_label.add_theme_color_override("font_color", Color.WHITE)
+	_drift_left_label.add_theme_constant_override("outline_size", 2)
+	_drift_left_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	_drift_left_label.custom_minimum_size = Vector2(220, 0)
+	_drift_left_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_drift_left_label.position = Vector2(20, 164)
+	canvas.add_child(_drift_left_label)
+
+	_drift_right_label = Label.new()
+	_drift_right_label.text = "DRIFT"
+	_drift_right_label.add_theme_font_override("font", _font)
+	_drift_right_label.add_theme_font_size_override("font_size", 13)
+	_drift_right_label.add_theme_color_override("font_color", Color.WHITE)
+	_drift_right_label.add_theme_constant_override("outline_size", 2)
+	_drift_right_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	_drift_right_label.custom_minimum_size = Vector2(220, 0)
+	_drift_right_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_drift_right_label.position = Vector2(20, 164)
+	canvas.add_child(_drift_right_label)
+
+	# Flash rect for peak drift
+	_drift_flash_rect = ColorRect.new()
+	_drift_flash_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_drift_flash_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_drift_flash_rect.color = Color(1.0, 1.0, 1.0, 0.12)
+	_drift_flash_rect.visible = false
+	canvas.add_child(_drift_flash_rect)
+
+	# Full-screen vignette for critical timer
+	_vignette_rect = ColorRect.new()
+	_vignette_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_vignette_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_vignette_rect.visible = false
+	var shader = Shader.new()
+	shader.code = """
+shader_type canvas_item;
+void fragment() {
+	vec2 uv = UV - 0.5;
+	float v = smoothstep(0.3, 0.75, length(uv));
+	COLOR = vec4(0.8, 0.0, 0.0, v * COLOR.a);
+}
+"""
+	var mat = ShaderMaterial.new()
+	mat.shader = shader
+	_vignette_rect.material = mat
+	canvas.add_child(_vignette_rect)
+
+func _update_timer_visual(t: float):
+	countdown_label.add_theme_constant_override("outline_size", 3)
+	countdown_label.add_theme_color_override("font_outline_color", Color.BLACK)
+
+	var new_zone = 0 if t > 30.0 else (1 if t > 10.0 else 2)
+	if new_zone != _timer_zone:
+		_timer_zone = new_zone
+		if _pulse_tween: _pulse_tween.kill()
+		if _blink_tween: _blink_tween.kill()
+		countdown_label.visible = true
+		countdown_label.scale = Vector2.ONE
+		match new_zone:
+			1:
+				_blink_tween = create_tween().set_loops()
+				_blink_tween.tween_callback(func(): countdown_label.visible = not countdown_label.visible)
+				_blink_tween.tween_interval(0.4)
+			2:
+				_blink_tween = create_tween().set_loops()
+				_blink_tween.tween_property(countdown_label, "scale", Vector2(1.15, 1.15), 0.1)
+				_blink_tween.tween_property(countdown_label, "scale", Vector2(1.0, 1.0), 0.1)
+
+	match new_zone:
+		0:
+			countdown_label.add_theme_color_override("font_color", Color.WHITE)
+			countdown_label.add_theme_font_size_override("font_size", 48)
+			_vignette_rect.visible = false
+		1:
+			countdown_label.add_theme_color_override("font_color", Color("#f5a623"))
+			countdown_label.add_theme_font_size_override("font_size", 52)
+			_vignette_rect.visible = false
+		2:
+			countdown_label.add_theme_color_override("font_color", Color("#e85555"))
+			countdown_label.add_theme_font_size_override("font_size", 64)
+			var intensity = inverse_lerp(10.0, 0.0, t)
+			_vignette_rect.visible = true
+			_vignette_rect.modulate.a = lerp(0.15, 0.5, intensity) * \
+				(0.7 + sin(Time.get_ticks_msec() * lerp(0.005, 0.013, intensity)) * 0.3)
+
+func _update_drift_bar_color():
+	var t = clamp(drift_bar.value / 35.0, 0.0, 1.0)
+	if t < 0.5:
+		_drift_bar_fill.bg_color = Color("#e85555").lerp(Color("#f5a623"), t * 2.0)
+	else:
+		_drift_bar_fill.bg_color = Color("#f5a623").lerp(Color("#00FF88"), (t - 0.5) * 2.0)
+
+func _trigger_drift_flash():
+	_drift_flash_rect.visible = true
+	_drift_flash_rect.modulate.a = 1.0
+	var tw = create_tween()
+	tw.tween_property(_drift_flash_rect, "modulate:a", 0.0, 0.18)
+	tw.tween_callback(func(): _drift_flash_rect.visible = false)
+
+func _format_pkg_health(h: float) -> String:
+	var filled = clamp(int(round(h)), 0, 5)
+	var empty = 5 - filled
+	var bars = "■".repeat(filled) + "□".repeat(empty)
+	var label = "Perfect!" if h >= 4.95 else ("Nice Shape!" if h >= 4.5 else ("Okay Shape" if h >= 4.0 else "Bad Shape"))
+	return "PKG %s %.1f/5  %s\n" % [bars, h, label]
+
+func _show_popup(text: String, color: Color):
+	var lbl = Label.new()
+	lbl.text = text
+	lbl.add_theme_color_override("font_color", color)
+	lbl.add_theme_font_size_override("font_size", 36)
+	lbl.add_theme_constant_override("outline_size", 3)
+	lbl.add_theme_color_override("font_outline_color", Color.BLACK)
+	lbl.add_theme_font_override("font", load("res://Assets/Fonts/Rajdhani-Bold.ttf"))
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.custom_minimum_size = Vector2(400, 50)
+	var vp = get_viewport().get_visible_rect().size
+	lbl.position = Vector2(vp.x / 2.0 - 200.0, vp.y * 0.38)
+	_drift_canvas.add_child(lbl)
+	var tw = lbl.create_tween().set_parallel(true)
+	tw.tween_property(lbl, "position:y", lbl.position.y - 80.0, 0.8).set_ease(Tween.EASE_OUT)
+	tw.tween_property(lbl, "modulate:a", 0.0, 0.8).set_delay(0.3)
+	tw.chain().tween_callback(lbl.queue_free)
 
 func _play_sfx(stream: AudioStream):
 	if stream == null or _sfx_player == null:
@@ -699,19 +880,10 @@ func _on_area_3d_area_entered(area):
 #	CHECKPOINT UI
 	var packages_health_at_pickup = ""
 	for package in packages_collected:
-		if float(package.package_health) >= 4.5:
-			print(package.name + " in Nice Shape! Well Done")
-			packages_health_at_pickup = packages_health_at_pickup + package.name + " in Nice Shape!\n"
-		elif float(package.package_health) >= 4.0:
-			print(package.name + " in Okay Shape")
-			packages_health_at_pickup = packages_health_at_pickup + package.name + " in Okay Shape\n"
-		else:
-			print(package.name + " in Bad Shape.")
-			packages_health_at_pickup = packages_health_at_pickup + package.name + " in Bad Shape.\n"
-	
+		packages_health_at_pickup += _format_pkg_health(float(package.package_health))
 	current_package_health = packages_health_at_pickup
 	print("this is the area: " + str(area))
-	current_player_score = "Driving Score of " + str(int(player_score_from_road))
+	current_player_score = "Score: %d/500" % int(player_score_from_road)
 	current_driver_stars = driver_stars + " Stars!"
 	
 	
@@ -761,16 +933,7 @@ func _flag_collected():
 	
 	var packages_health_at_pickup = ""
 	for package in packages_collected:
-		if float(package.package_health) >= 4.5:
-			print(package.name + " in Nice Shape! Well Done")
-			packages_health_at_pickup = packages_health_at_pickup + package.name + " in Nice Shape!\n"
-		elif float(package.package_health) >= 4.0:
-			print(package.name + " in Okay Shape")
-			packages_health_at_pickup = packages_health_at_pickup + package.name + " in Okay Shape\n"
-		else:
-			print(package.name + " in Bad Shape.")
-			packages_health_at_pickup = packages_health_at_pickup + package.name + " in Bad Shape.\n"
-	
+		packages_health_at_pickup += _format_pkg_health(float(package.package_health))
 	current_package_health = packages_health_at_pickup
 	
 func _place_order_collected():
@@ -791,6 +954,7 @@ func _dropoff_order():
 		order_count_label.text = "Orders: " + str(orders_placed)
 		package_count -= 1
 		flag_count_label.text = "Packages: " + str(package_count)
+		_show_popup("DELIVERED!", Color("#00FF88"))
 		Game.on_dropoff_collected()
 	else:
 		displayMessage("You need an order and a package to deliver", 2.0)
@@ -833,6 +997,9 @@ func _on_delivery_dropoff_area_3d_area_entered(area):
 	finished_time = countdown_timer.time_left
 	win_canvas_layer.show()
 	_drift_canvas.hide()
+	var win_play = win_canvas_layer.find_child("PlayButton", true, false)
+	if win_play:
+		win_play.grab_focus()
 	if FileAccess.file_exists(save_path):
 		print("WOAH THERE BUCKAROO")
 	_save_and_load_data()

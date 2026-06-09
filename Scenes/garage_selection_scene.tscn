@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cvvcev8jfkd1c"]
+[gd_scene load_steps=22 format=3 uid="uid://cvvcev8jfkd1c"]
 
 [ext_resource type="Material" uid="uid://e5dlah42jn35" path="res://Materials/gameCampGround.tres" id="1_7pyv3"]
 [ext_resource type="Script" uid="uid://dvbuopw4t5ept" path="res://Scenes/garage_selection_scene.gd" id="1_clqmu"]
@@ -7,15 +7,17 @@
 [ext_resource type="PackedScene" uid="uid://bjofsuoqcvqvc" path="res://Assets/Car Kit/Models/FBX format/suv.fbx" id="4_faw8h"]
 [ext_resource type="PackedScene" uid="uid://dvx47b8yg0sw7" path="res://Assets/Car Kit/Models/FBX format/taxi.fbx" id="5_gsyxu"]
 [ext_resource type="PackedScene" uid="uid://cfn56q3rcmkcu" path="res://Assets/Car Kit/Models/FBX format/van.fbx" id="6_clqmu"]
-[ext_resource type="StyleBox" uid="uid://bod5iqq51uoa6" path="res://Materials/garage_selection_scene3.tres" id="7_faw8h"]
-[ext_resource type="StyleBox" uid="uid://dgxy3jyjr8uj2" path="res://Materials/garage_selection_scene_hover.tres" id="8_gsyxu"]
-[ext_resource type="StyleBox" uid="uid://dexaofx6masv7" path="res://Materials/back_button_hover.tres" id="10_lxepi"]
-[ext_resource type="StyleBox" uid="uid://bjb1lav3ou1lj" path="res://Materials/back_button_normal.tres" id="10_rwkdw"]
-[ext_resource type="StyleBox" uid="uid://dnf1mb466ly72" path="res://Materials/back_button_normal2.tres" id="12_5ojv2"]
+[ext_resource type="FontFile" uid="uid://bb5suhcrl4snu" path="res://Assets/Fonts/Rajdhani-Bold.ttf" id="8_428ff"]
 [ext_resource type="PackedScene" uid="uid://dw2fq8k8wonqn" path="res://Scenes/road_curve_dirt.tscn" id="13_lqagv"]
 [ext_resource type="PackedScene" uid="uid://duil05bm4risq" path="res://Scenes/road_double_straight_dirt.tscn" id="14_6awfq"]
 [ext_resource type="PackedScene" uid="uid://bx6nme6047jlm" path="res://Scenes/road_curve_intersection_dirt.tscn" id="15_6awfq"]
 [ext_resource type="PackedScene" uid="uid://cqq03yx8lhmrv" path="res://Scenes/road_end_dirt.tscn" id="16_y04vw"]
+[ext_resource type="StyleBox" uid="uid://bx3o0twle4jys" path="res://themes/carselect_hover.tres" id="csh"]
+[ext_resource type="StyleBox" uid="uid://c0awl14a6le42" path="res://themes/carselect_normal.tres" id="csn"]
+[ext_resource type="StyleBox" uid="uid://b5risy3qoc8tg" path="res://themes/carselect_pressed.tres" id="csp"]
+[ext_resource type="StyleBox" uid="uid://cep7ouovrcrvr" path="res://themes/nav_hover.tres" id="nh"]
+[ext_resource type="StyleBox" uid="uid://clq0ncf1voryx" path="res://themes/nav_normal.tres" id="nn"]
+[ext_resource type="StyleBox" uid="uid://c1yf617ug85lb" path="res://themes/nav_pressed.tres" id="np"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_crsjj"]
 sky_top_color = Color(0.145545, 0.246072, 0.743515, 1)
@@ -30,25 +32,6 @@ sky_material = SubResource("ProceduralSkyMaterial_crsjj")
 background_mode = 2
 sky = SubResource("Sky_y04vw")
 tonemap_mode = 2
-
-[sub_resource type="Gradient" id="Gradient_gsyxu"]
-offsets = PackedFloat32Array(0.00276243, 0.320442, 0.912568)
-colors = PackedColorArray(0.428141, 0.626609, 0.970237, 1, 0.480514, 0.732889, 0.966889, 1, 0.276574, 0.73905, 0.935258, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_clqmu"]
-gradient = SubResource("Gradient_gsyxu")
-metadata/_snap_count = 44
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rwkdw"]
-content_margin_left = 20.0
-content_margin_top = 2.0
-content_margin_right = 20.0
-content_margin_bottom = 2.0
-texture = SubResource("GradientTexture2D_clqmu")
-expand_margin_left = 5.0
-expand_margin_top = 5.0
-expand_margin_right = 5.0
-expand_margin_bottom = 5.0
 
 [node name="GarageSelection" type="Node3D"]
 script = ExtResource("1_clqmu")
@@ -146,6 +129,7 @@ layout_mode = 2
 [node name="MoneyLabel" type="Label" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 20
 text = "MONEY:"
 
@@ -158,8 +142,9 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer5"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxTexture_rwkdw")
+theme_override_styles/normal = ExtResource("csn")
 text = "CAR SELECT"
 horizontal_alignment = 1
 
@@ -177,10 +162,11 @@ theme_override_constants/margin_left = 30
 [node name="VanButton" type="Button" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 58
-theme_override_styles/hover = ExtResource("8_gsyxu")
-theme_override_styles/pressed = ExtResource("7_faw8h")
-theme_override_styles/normal = ExtResource("7_faw8h")
+theme_override_styles/hover = ExtResource("csh")
+theme_override_styles/pressed = ExtResource("csp")
+theme_override_styles/normal = ExtResource("csn")
 text = "VAN"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -190,10 +176,11 @@ theme_override_constants/margin_left = 20
 [node name="TaxiButton" type="Button" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 58
-theme_override_styles/hover = ExtResource("8_gsyxu")
-theme_override_styles/pressed = ExtResource("7_faw8h")
-theme_override_styles/normal = ExtResource("7_faw8h")
+theme_override_styles/hover = ExtResource("csh")
+theme_override_styles/pressed = ExtResource("csp")
+theme_override_styles/normal = ExtResource("csn")
 text = "TAXI"
 
 [node name="MarginContainer" type="MarginContainer" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer"]
@@ -210,10 +197,11 @@ theme_override_constants/margin_left = 30
 [node name="SuvButton" type="Button" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 58
-theme_override_styles/hover = ExtResource("8_gsyxu")
-theme_override_styles/pressed = ExtResource("7_faw8h")
-theme_override_styles/normal = ExtResource("7_faw8h")
+theme_override_styles/hover = ExtResource("csh")
+theme_override_styles/pressed = ExtResource("csp")
+theme_override_styles/normal = ExtResource("csn")
 text = "SUV"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
@@ -223,10 +211,11 @@ theme_override_constants/margin_left = 20
 [node name="LuxButton" type="Button" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 58
-theme_override_styles/hover = ExtResource("8_gsyxu")
-theme_override_styles/pressed = ExtResource("7_faw8h")
-theme_override_styles/normal = ExtResource("7_faw8h")
+theme_override_styles/hover = ExtResource("csh")
+theme_override_styles/pressed = ExtResource("csp")
+theme_override_styles/normal = ExtResource("csn")
 text = "LUX"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer"]
@@ -243,10 +232,11 @@ theme_override_constants/margin_left = 30
 [node name="SedanButton" type="Button" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer4"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 58
-theme_override_styles/hover = ExtResource("8_gsyxu")
-theme_override_styles/pressed = ExtResource("7_faw8h")
-theme_override_styles/normal = ExtResource("7_faw8h")
+theme_override_styles/hover = ExtResource("csh")
+theme_override_styles/pressed = ExtResource("csp")
+theme_override_styles/normal = ExtResource("csn")
 text = "SEDAN"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer4"]
@@ -257,7 +247,7 @@ theme_override_constants/margin_left = 20
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = ExtResource("7_faw8h")
+theme_override_styles/normal = ExtResource("csn")
 text = "TAXI"
 
 [node name="MarginContainer4" type="MarginContainer" parent="Control/Control/MarginContainer/HBoxContainer/VBoxContainer"]
@@ -289,14 +279,19 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/margin_left = 30
 
+[node name="MarginContainer3" type="MarginContainer" parent="Control/Control/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+
 [node name="BackButton" type="Button" parent="Control/Control/VBoxContainer/HBoxContainer3"]
-visible = false
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.102, 0.2275, 0.4157, 1)
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 42
-theme_override_styles/hover = ExtResource("10_lxepi")
-theme_override_styles/pressed = ExtResource("10_rwkdw")
-theme_override_styles/normal = ExtResource("12_5ojv2")
+theme_override_styles/hover = ExtResource("nh")
+theme_override_styles/pressed = ExtResource("np")
+theme_override_styles/normal = ExtResource("nn")
 text = "BACK"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Control/Control/VBoxContainer/HBoxContainer3"]
@@ -305,12 +300,15 @@ theme_override_constants/margin_left = 30
 
 [node name="DebugButton" type="Button" parent="Control/Control/VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 42
-theme_override_styles/hover = ExtResource("10_lxepi")
-theme_override_styles/pressed = ExtResource("10_rwkdw")
-theme_override_styles/normal = ExtResource("12_5ojv2")
+theme_override_styles/hover = ExtResource("nh")
+theme_override_styles/pressed = ExtResource("np")
+theme_override_styles/normal = ExtResource("nn")
 text = "DEBUG"
 
 [node name="ConfirmControl2" type="Control" parent="Control"]
@@ -352,6 +350,7 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 42
 text = "PRICE: 0"
 horizontal_alignment = 1
@@ -360,10 +359,12 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 52
-theme_override_styles/hover = ExtResource("10_lxepi")
-theme_override_styles/pressed = ExtResource("10_rwkdw")
-theme_override_styles/normal = ExtResource("12_5ojv2")
+theme_override_styles/hover = ExtResource("nh")
+theme_override_styles/pressed = ExtResource("np")
+theme_override_styles/normal = ExtResource("nn")
 text = "OWNED"
 
 [node name="MarginContainer" type="MarginContainer" parent="Control/ConfirmControl2/MarginContainer/VBoxContainer/HBoxContainer"]
@@ -383,10 +384,12 @@ horizontal_alignment = 1
 
 [node name="NextButton" type="Button" parent="Control/ConfirmControl2/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("8_428ff")
 theme_override_font_sizes/font_size = 52
-theme_override_styles/hover = ExtResource("10_lxepi")
-theme_override_styles/pressed = ExtResource("10_rwkdw")
-theme_override_styles/normal = ExtResource("12_5ojv2")
+theme_override_styles/hover = ExtResource("nh")
+theme_override_styles/pressed = ExtResource("np")
+theme_override_styles/normal = ExtResource("nn")
 text = "NEXT"
 
 [node name="ConfirmControl" type="Control" parent="."]

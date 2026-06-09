@@ -15,6 +15,10 @@ var player_money_total = 0
 var main_game_scene: PackedScene
 @export var main_starting_screen_scene: PackedScene = preload("res://Scenes/start_screen_env.tscn")
 
+func _unhandled_input(event: InputEvent):
+	if event.is_action_pressed("ui_cancel"):
+		_on_quit_button_pressed()
+
 func _ready():
 	main_game_scene = load("res://Scenes/gameLarge.tscn")
 	_load_data()
