@@ -152,6 +152,7 @@ var inGearNumber = 0
 @onready var delivery_depot = $"../Checkpoint2"
 @onready var win_screen = $WinScreen
 @onready var pause_menu = %PauseMenu
+@onready var touch_button_pause = %TouchButtonPause
 @onready var pause_settings_menu = %PauseSettingsMenu
 @onready var pause_free_roam_menu = %PauseFreeRoamMenu
 @onready var win_canvas_layer = %WinCanvasLayer
@@ -189,6 +190,8 @@ func _ready():
 	_sfx_player = AudioStreamPlayer.new()
 	_sfx_player.bus = "SFX"
 	add_child(_sfx_player)
+	touch_button_pause.mouse_filter = Control.MOUSE_FILTER_STOP
+	touch_button_pause.gui_input.connect(_on_touch_pause_input)
 	_build_minimap_ui()
 
 func _build_minimap_ui():
@@ -275,10 +278,10 @@ func _smash_tree(tree: Node):
 	particles.global_position = tree_pos
 	get_tree().create_timer(particles.lifetime + 0.5).timeout.connect(particles.queue_free)
 
-func _physics_process(delta):
-	if Input.is_action_just_pressed("ui_cancel") and not Input.is_action_just_pressed("handbrake"):
-		var canvas_layer_node = pause_menu.get_node_or_null("MarginContainer/MarginContainer/CanvasLayer")
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel") and not event.is_action_pressed("handbrake"):
 		if not is_paused:
+			var canvas_layer_node = pause_menu.get_node_or_null("MarginContainer/MarginContainer/CanvasLayer")
 			pause_menu.show()
 			if canvas_layer_node:
 				canvas_layer_node.visible = true
@@ -289,17 +292,9 @@ func _physics_process(delta):
 				Engine.time_scale = 0.0
 			else:
 				get_tree().paused = true
-		else:
-			pause_menu.hide()
-			if canvas_layer_node:
-				canvas_layer_node.visible = false
-			is_paused = false
-			if OS.get_name() == "Web":
-				Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-				Engine.time_scale = 1.0
-			else:
-				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-				get_tree().paused = false
+			get_viewport().set_input_as_handled()
+
+func _physics_process(delta):
 
 	if is_paused:
 		return
@@ -527,7 +522,7 @@ func _process(delta):
 				_drift_mult_tween.tween_property(_drift_mult_label, "scale", Vector2(1.3, 1.3), 0.05)
 				_drift_mult_tween.tween_property(_drift_mult_label, "scale", Vector2(1.0, 1.0), 0.1)
 			var _mt = clamp((drift_combo_multiplier - 1.0) / 3.0, 0.0, 1.0)
-			_drift_mult_label.add_theme_color_override("font_color", Color("#FFB300").lerp(Color("#FF2D2D"), _mt))
+			_drift_mult_label.add_theme_color_override("font_color", Color("#18FFFF").lerp(Color("#FF1493"), _mt))
 			if drift_pending >= 35.0 or _drift_mult_label.visible:
 				_drift_mult_label.visible = true
 				_drift_mult_label_timer = 2.0
@@ -556,6 +551,8 @@ func _process(delta):
 			drift_bar.value = 0.0
 			_drift_bar_fill.bg_color = Color("#e85555")
 			drift_sustained_time = 0.0
+			drift_combo_multiplier = 1.0
+			_prev_drift_mult = 1.0
 			_is_airtime = false
 		scoreLabel.text = "Score: %d" % int(drift_score_total)
 		if _drift_mult_label_timer > 0.0:
@@ -616,6 +613,9 @@ func _build_drift_bar():
 	_drift_bar_fill.corner_radius_bottom_right = 6
 	drift_bar.add_theme_stylebox_override("fill", _drift_bar_fill)
 	canvas.add_child(drift_bar)
+	# DRIFT bar labels
+	var _font = load("res://Assets/Fonts/Rajdhani-Bold.ttf")
+
 	_drift_mult_label = Label.new()
 	_drift_mult_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_drift_mult_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -623,19 +623,17 @@ func _build_drift_bar():
 	_drift_mult_label.anchor_right = 0.5
 	_drift_mult_label.anchor_top = 0.75
 	_drift_mult_label.anchor_bottom = 0.75
-	_drift_mult_label.offset_left = -150.0
-	_drift_mult_label.offset_right = 150.0
-	_drift_mult_label.offset_top = -20.0
-	_drift_mult_label.offset_bottom = 20.0
-	_drift_mult_label.add_theme_font_size_override("font_size", 28)
-	_drift_mult_label.add_theme_color_override("font_color", Color(0.2, 0.9, 0.3))
-	_drift_mult_label.add_theme_constant_override("outline_size", 8)
+	_drift_mult_label.offset_left = -200.0
+	_drift_mult_label.offset_right = 200.0
+	_drift_mult_label.offset_top = -24.0
+	_drift_mult_label.offset_bottom = 24.0
+	_drift_mult_label.add_theme_font_override("font", _font)
+	_drift_mult_label.add_theme_font_size_override("font_size", 32)
+	_drift_mult_label.add_theme_color_override("font_color", Color("#18FFFF"))
+	_drift_mult_label.add_theme_constant_override("outline_size", 6)
 	_drift_mult_label.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0))
 	_drift_mult_label.visible = false
 	canvas.add_child(_drift_mult_label)
-
-	# DRIFT bar labels
-	var _font = load("res://Assets/Fonts/Rajdhani-Bold.ttf")
 	_drift_header_label = Label.new()
 	_drift_header_label.text = "DRIFT"
 	_drift_header_label.add_theme_font_override("font", _font)
@@ -1029,6 +1027,21 @@ func _on_delivery_dropoff_area_3d_area_entered(area):
 			print(packages_collected[1].name + " in Bad Shape.")
 			win_label.text = "Deliveries Completed"
 			score_label_for_win.text = "Packages were in Bad Shape.\nTry Again for a better outcome" + reward_line
+
+func _on_touch_pause_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if not is_paused:
+			var canvas_layer_node = pause_menu.get_node_or_null("MarginContainer/MarginContainer/CanvasLayer")
+			pause_menu.show()
+			if canvas_layer_node:
+				canvas_layer_node.visible = true
+			is_paused = true
+			pause_menu.grab_initial_focus()
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			if OS.get_name() == "Web":
+				Engine.time_scale = 0.0
+			else:
+				get_tree().paused = true
 
 func _pause_menu():
 	is_paused = not is_paused

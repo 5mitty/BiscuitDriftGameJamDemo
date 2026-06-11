@@ -8,11 +8,12 @@ extends Control
 @onready var quit = %Quit
 
 func _ready():
-	pass
+	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _unhandled_input(event: InputEvent):
 	if event.is_action_pressed("ui_cancel") and visible:
 		_on_resume_pressed()
+		get_viewport().set_input_as_handled()
 
 func grab_initial_focus():
 	resume.grab_focus()

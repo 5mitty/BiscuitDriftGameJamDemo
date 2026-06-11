@@ -7,6 +7,7 @@ var rebinding_action: String = ""
 var rebind_buttons: Dictionary = {}
 var rebound_actions: Array = []
 var settings_path = "user://settings.cfg"
+var touch_gamepad_enabled: bool = false
 var _default_key_events: Dictionary = {}
 var _default_joy_events: Dictionary = {}
 var _settings_scroll: ScrollContainer = null
@@ -107,6 +108,8 @@ func _build_settings_ui():
 	inner.add_theme_constant_override("separation", 8)
 	margin_wrap.add_child(inner)
 
+	_add_section_label(inner, "TOUCH CONTROLS")
+	_add_touch_toggle(inner)
 	_add_section_label(inner, "VOLUME")
 	_add_slider(inner, "Master")
 	_add_slider(inner, "Music")
@@ -198,6 +201,52 @@ func _refresh_tab_styles() -> void:
 	_tab_joy_btn.add_theme_stylebox_override("hover",   active_h if not kbd_active else idle_h)
 	_tab_joy_btn.add_theme_stylebox_override("pressed", active_p if not kbd_active else idle_p)
 	_tab_joy_btn.add_theme_color_override("font_color", Color.WHITE)
+
+func _add_touch_toggle(parent: Node):
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+
+	var lbl := Label.new()
+	lbl.text = "Touch Gamepad"
+	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl.add_theme_font_size_override("font_size", 18)
+	lbl.add_theme_color_override("font_color", Color.WHITE)
+
+	var btn := Button.new()
+	btn.text = "ON" if touch_gamepad_enabled else "OFF"
+	btn.custom_minimum_size = Vector2(80, 0)
+	btn.add_theme_font_size_override("font_size", 16)
+	btn.add_theme_color_override("font_color", Color.WHITE)
+	_style_touch_toggle(btn, touch_gamepad_enabled)
+	btn.pressed.connect(_on_touch_gamepad_toggled.bind(btn))
+	_focus_chain.append(btn)
+
+	row.add_child(lbl)
+	row.add_child(btn)
+	parent.add_child(row)
+
+func _style_touch_toggle(btn: Button, enabled: bool) -> void:
+	if enabled:
+		btn.add_theme_stylebox_override("normal",  load("res://themes/primary_normal.tres"))
+		btn.add_theme_stylebox_override("hover",   load("res://themes/primary_hover.tres"))
+		btn.add_theme_stylebox_override("pressed", load("res://themes/primary_pressed.tres"))
+	else:
+		btn.add_theme_stylebox_override("normal",  load("res://themes/secondary_normal.tres"))
+		btn.add_theme_stylebox_override("hover",   load("res://themes/secondary_hover.tres"))
+		btn.add_theme_stylebox_override("pressed", load("res://themes/secondary_pressed.tres"))
+
+func _on_touch_gamepad_toggled(btn: Button) -> void:
+	touch_gamepad_enabled = not touch_gamepad_enabled
+	btn.text = "ON" if touch_gamepad_enabled else "OFF"
+	_style_touch_toggle(btn, touch_gamepad_enabled)
+	_apply_touch_gamepad(touch_gamepad_enabled)
+	_save_settings()
+
+func _apply_touch_gamepad(enabled: bool) -> void:
+	var wasd   = player.get_node_or_null("UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer")
+	var pedals = player.get_node_or_null("UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer")
+	if wasd:   wasd.visible   = enabled
+	if pedals: pedals.visible = enabled
 
 func _add_section_label(parent: Node, text: String):
 	var spacer := Control.new()
@@ -434,6 +483,7 @@ func _on_volume_changed(value: float, bus_name: String):
 func _save_settings():
 	var cfg := ConfigFile.new()
 	cfg.set_value("meta", "version", 2)
+	cfg.set_value("controls", "touch_gamepad", touch_gamepad_enabled)
 	for bus in ["Master", "Music", "SFX"]:
 		var idx = AudioServer.get_bus_index(bus)
 		if idx != -1:
@@ -466,6 +516,9 @@ func _load_settings():
 		cfg.set_value("meta", "version", 2)
 		cfg.save(settings_path)
 		return
+
+	touch_gamepad_enabled = cfg.get_value("controls", "touch_gamepad", false)
+	call_deferred("_apply_touch_gamepad", touch_gamepad_enabled)
 
 	for bus in ["Master", "Music", "SFX"]:
 		var idx = AudioServer.get_bus_index(bus)

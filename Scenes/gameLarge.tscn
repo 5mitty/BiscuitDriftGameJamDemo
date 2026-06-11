@@ -1,4 +1,4 @@
-[gd_scene load_steps=140 format=4 uid="uid://8x0fe8tj7kpd"]
+[gd_scene load_steps=142 format=4 uid="uid://8x0fe8tj7kpd"]
 
 [ext_resource type="Script" uid="uid://clm2j600ksgoy" path="res://Scenes/game_large.gd" id="1_73wmg"]
 [ext_resource type="AudioStream" uid="uid://bulc2l888ljc" path="res://Music/OST/ironM006 mel last min 2.wav" id="2_e1r47"]
@@ -66,6 +66,8 @@
 [ext_resource type="StyleBox" path="res://themes/secondary_hover.tres" id="sh"]
 [ext_resource type="StyleBox" path="res://themes/secondary_normal.tres" id="sn"]
 [ext_resource type="StyleBox" path="res://themes/secondary_pressed.tres" id="sp"]
+[ext_resource type="Script" uid="uid://blik8b5i6ce4q" path="res://Scripts/TouchGamepadPedals.gd" id="tgp"]
+[ext_resource type="Script" uid="uid://bhu2gfarqf173" path="res://Scripts/TouchGamepadWASD.gd" id="tgw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qxrlw"]
 sky_top_color = Color(0.145545, 0.246072, 0.743515, 1)
@@ -1251,6 +1253,234 @@ offset_right = 40.0
 offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("14_ourmf")
 
+[node name="TouchGamepadWASD" type="Control" parent="Player/UI"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("tgw")
+
+[node name="MarginContainer" type="MarginContainer" parent="Player/UI/TouchGamepadWASD"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 31.943
+anchor_bottom = 17.893
+offset_right = -1237.72
+offset_bottom = -675.72
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Player/UI/TouchGamepadWASD/MarginContainer"]
+layout_mode = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer"]
+visible = false
+
+[node name="MarginContainer2" type="MarginContainer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 420.0
+offset_right = -680.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer2" type="MarginContainer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer"]
+custom_minimum_size = Vector2(600, 300)
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ColorRect" type="ColorRect" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2"]
+visible = false
+layout_mode = 2
+color = Color(0.31802, 0.31802, 0.31802, 0.803922)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Forward" type="Button" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = ExtResource("sh")
+theme_override_styles/pressed = ExtResource("sp")
+theme_override_styles/normal = ExtResource("sn")
+text = "Forward"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+
+[node name="Left" type="Button" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3529, 0.2667, 0, 1)
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = ExtResource("dh")
+theme_override_styles/pressed = ExtResource("dp")
+theme_override_styles/normal = ExtResource("dn")
+text = "Left"
+
+[node name="Back" type="Button" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = ExtResource("ph")
+theme_override_styles/pressed = ExtResource("pp")
+theme_override_styles/normal = ExtResource("pn")
+text = "Back"
+
+[node name="Right" type="Button" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3529, 0.2667, 0, 1)
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = ExtResource("dh")
+theme_override_styles/pressed = ExtResource("dp")
+theme_override_styles/normal = ExtResource("dn")
+text = "Right"
+
+[node name="TouchGamepadPedals" type="Control" parent="Player/UI"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("tgp")
+
+[node name="MarginContainer" type="MarginContainer" parent="Player/UI/TouchGamepadPedals"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 31.943
+anchor_bottom = 17.893
+offset_right = -1237.72
+offset_bottom = -675.72
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Player/UI/TouchGamepadPedals/MarginContainer"]
+layout_mode = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer"]
+visible = false
+
+[node name="MarginContainer2" type="MarginContainer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 675.0
+offset_top = 420.0
+offset_right = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer2" type="MarginContainer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer"]
+custom_minimum_size = Vector2(600, 300)
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ColorRect" type="ColorRect" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2"]
+visible = false
+layout_mode = 2
+color = Color(0.31802, 0.31802, 0.31802, 0.803922)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(0, 89)
+layout_mode = 2
+
+[node name="NA" type="Button" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer2"]
+visible = false
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3529, 0.2667, 0, 1)
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = ExtResource("dh")
+theme_override_styles/pressed = ExtResource("dp")
+theme_override_styles/normal = ExtResource("dn")
+text = "Left"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+
+[node name="Handbrake" type="Button" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3529, 0.2667, 0, 1)
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = ExtResource("dh")
+theme_override_styles/pressed = ExtResource("dp")
+theme_override_styles/normal = ExtResource("dn")
+text = "Hand"
+
+[node name="Brake" type="Button" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = ExtResource("ph")
+theme_override_styles/pressed = ExtResource("pp")
+theme_override_styles/normal = ExtResource("pn")
+text = "Brake"
+
+[node name="Gas" type="Button" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(182, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = ExtResource("sh")
+theme_override_styles/pressed = ExtResource("sp")
+theme_override_styles/normal = ExtResource("sn")
+text = "Gas"
+
+[node name="TouchButtonPause" type="Label" parent="Player/UI"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+offset_top = 4.0
+offset_right = -1221.0
+offset_bottom = -639.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/shadow_offset_x = 10
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("14_ourmf")
+theme_override_font_sizes/font_size = 40
+text = "||"
+horizontal_alignment = 1
+
 [node name="CountdownTimer" type="Timer" parent="Player"]
 unique_name_in_owner = true
 one_shot = true
@@ -1319,6 +1549,7 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="ColorRect" type="ColorRect" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2"]
+visible = false
 layout_mode = 2
 color = Color(0.31802, 0.31802, 0.31802, 0.803922)
 
@@ -1328,27 +1559,35 @@ layout_mode = 2
 [node name="Resume" type="Button" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 80
+theme_override_font_sizes/font_size = 70
 theme_override_styles/hover = ExtResource("ph")
 theme_override_styles/pressed = ExtResource("pp")
 theme_override_styles/normal = ExtResource("pn")
 text = "Resume"
 
+[node name="MarginContainer" type="MarginContainer" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
 [node name="Settings" type="Button" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 80
+theme_override_font_sizes/font_size = 70
 theme_override_styles/hover = ExtResource("sh")
 theme_override_styles/pressed = ExtResource("sp")
 theme_override_styles/normal = ExtResource("sn")
 text = "Settings
 "
 
+[node name="MarginContainer2" type="MarginContainer" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
 [node name="Quit" type="Button" parent="Player/PauseMenu/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3529, 0.2667, 0, 1)
-theme_override_font_sizes/font_size = 80
+theme_override_font_sizes/font_size = 70
 theme_override_styles/hover = ExtResource("dh")
 theme_override_styles/pressed = ExtResource("dp")
 theme_override_styles/normal = ExtResource("dn")
