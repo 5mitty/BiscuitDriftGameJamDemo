@@ -1280,7 +1280,6 @@ grow_vertical = 2
 layout_mode = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer"]
-visible = false
 
 [node name="MarginContainer2" type="MarginContainer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer"]
 anchors_preset = 15
@@ -1324,8 +1323,15 @@ theme_override_styles/pressed = ExtResource("sp")
 theme_override_styles/normal = ExtResource("sn")
 text = "Forward"
 
+[node name="ForwardTouch" type="TouchScreenButton" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer"]
 layout_mode = 2
+
+[node name="LeftTouch" type="TouchScreenButton" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+position = Vector2(0, -93)
 
 [node name="Left" type="Button" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
@@ -1337,6 +1343,10 @@ theme_override_styles/pressed = ExtResource("dp")
 theme_override_styles/normal = ExtResource("dn")
 text = "Left"
 
+[node name="BackTouch" type="TouchScreenButton" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+position = Vector2(0, -93)
+
 [node name="Back" type="Button" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
@@ -1344,6 +1354,10 @@ theme_override_styles/hover = ExtResource("ph")
 theme_override_styles/pressed = ExtResource("pp")
 theme_override_styles/normal = ExtResource("pn")
 text = "Back"
+
+[node name="RightTouch" type="TouchScreenButton" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+position = Vector2(0, -93)
 
 [node name="Right" type="Button" parent="Player/UI/TouchGamepadWASD/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -1381,7 +1395,6 @@ grow_vertical = 2
 layout_mode = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer"]
-visible = false
 
 [node name="MarginContainer2" type="MarginContainer" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer"]
 anchors_preset = 15
@@ -1445,6 +1458,10 @@ theme_override_styles/pressed = ExtResource("dp")
 theme_override_styles/normal = ExtResource("dn")
 text = "Hand"
 
+[node name="HandbrakeTouch" type="TouchScreenButton" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer/Handbrake"]
+unique_name_in_owner = true
+position = Vector2(0, -93)
+
 [node name="Brake" type="Button" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
@@ -1452,6 +1469,10 @@ theme_override_styles/hover = ExtResource("ph")
 theme_override_styles/pressed = ExtResource("pp")
 theme_override_styles/normal = ExtResource("pn")
 text = "Brake"
+
+[node name="BrakeTouch" type="TouchScreenButton" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer/Brake"]
+unique_name_in_owner = true
+position = Vector2(-191, -186)
 
 [node name="Gas" type="Button" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(182, 0)
@@ -1461,6 +1482,9 @@ theme_override_styles/hover = ExtResource("sh")
 theme_override_styles/pressed = ExtResource("sp")
 theme_override_styles/normal = ExtResource("sn")
 text = "Gas"
+
+[node name="BrakeTouch2" type="TouchScreenButton" parent="Player/UI/TouchGamepadPedals/MarginContainer/MarginContainer/CanvasLayer/MarginContainer2/MarginContainer/MarginContainer2/VBoxContainer/HBoxContainer/Gas"]
+position = Vector2(-396, -372)
 
 [node name="TouchButtonPause" type="Label" parent="Player/UI"]
 unique_name_in_owner = true

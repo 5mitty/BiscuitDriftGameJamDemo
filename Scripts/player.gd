@@ -43,6 +43,356 @@ const CAR_STATS = {
 	5: {engine=460, steer=0.95, drift_f=1.05, normal_f=2.6, label="Sedan — Nimble. Twitchy."},
 }
 
+enum EngineMode { LEGACY, REALISTIC }
+var engine_mode: EngineMode = EngineMode.REALISTIC
+
+@export var realistic_output_multiplier: float = 0.03
+
+const ENGINE_SPECS: Dictionary = {
+	"supra": {
+		"engine_name": "2JZ-GTE Twin Turbo",
+		"engine_type": "TURBO",
+		"idle_rpm": 800.0,
+		"redline_rpm": 7000.0,
+		"rev_limiter_rpm": 7200.0,
+		"rev_limiter_hard_cut": false,
+		"peak_torque_nm": 451.0,
+		"peak_torque_rpm": 4000.0,
+		"torque_curve": [
+			[800.0, 0.28], [1200.0, 0.32], [1800.0, 0.38], [2400.0, 0.45],
+			[3000.0, 0.72], [3600.0, 0.90], [4000.0, 1.00], [4800.0, 0.97],
+			[5500.0, 0.91], [6200.0, 0.82], [7000.0, 0.70],
+		],
+		"boost_spool_start_rpm": 2400.0,
+		"boost_full_rpm": 3600.0,
+		"boost_torque_multiplier": 1.45,
+		"flywheel_inertia": 0.18,
+		"drivetrain_loss": 0.15,
+		"gear_ratios": [3.28, 1.89, 1.28, 0.97, 0.76, 0.62],
+		"final_drive_ratio": 3.93,
+		"wheel_radius_m": 0.33,
+		"engine_brake_torque_nm": 80.0,
+		"upshift_rpm_threshold": 0.86,
+		"downshift_rpm_threshold": 0.42,
+	},
+	"muscle": {
+		"engine_name": "Big Block V8 NA",
+		"engine_type": "NA",
+		"idle_rpm": 750.0,
+		"redline_rpm": 6000.0,
+		"rev_limiter_rpm": 6200.0,
+		"rev_limiter_hard_cut": true,
+		"peak_torque_nm": 550.0,
+		"peak_torque_rpm": 2800.0,
+		"torque_curve": [
+			[750.0, 0.55], [1200.0, 0.70], [1800.0, 0.88], [2800.0, 1.00],
+			[3500.0, 0.97], [4200.0, 0.90], [5000.0, 0.80], [5500.0, 0.70],
+			[6000.0, 0.58],
+		],
+		"boost_spool_start_rpm": 0.0,
+		"boost_full_rpm": 0.0,
+		"boost_torque_multiplier": 1.0,
+		"flywheel_inertia": 0.25,
+		"drivetrain_loss": 0.12,
+		"gear_ratios": [3.0, 1.8, 1.3, 1.0, 0.82],
+		"final_drive_ratio": 3.55,
+		"wheel_radius_m": 0.34,
+		"engine_brake_torque_nm": 120.0,
+		"upshift_rpm_threshold": 0.85,
+		"downshift_rpm_threshold": 0.40,
+	},
+	"default": {
+		"engine_name": "4-Cylinder NA",
+		"engine_type": "NA",
+		"idle_rpm": 800.0,
+		"redline_rpm": 6500.0,
+		"rev_limiter_rpm": 6700.0,
+		"rev_limiter_hard_cut": false,
+		"peak_torque_nm": 200.0,
+		"peak_torque_rpm": 4200.0,
+		"torque_curve": [
+			[800.0, 0.45], [1500.0, 0.58], [2500.0, 0.75], [3500.0, 0.90],
+			[4200.0, 1.00], [5000.0, 0.96], [5800.0, 0.85], [6500.0, 0.68],
+		],
+		"boost_spool_start_rpm": 0.0,
+		"boost_full_rpm": 0.0,
+		"boost_torque_multiplier": 1.0,
+		"flywheel_inertia": 0.10,
+		"drivetrain_loss": 0.13,
+		"gear_ratios": [3.4, 2.0, 1.4, 1.05, 0.85],
+		"final_drive_ratio": 4.1,
+		"wheel_radius_m": 0.30,
+		"engine_brake_torque_nm": 50.0,
+		"upshift_rpm_threshold": 0.84,
+		"downshift_rpm_threshold": 0.38,
+	},
+	# van
+	"van": {
+		"engine_name": "2.5L Van NA",
+		"engine_type": "NA",
+		"idle_rpm": 700.0,
+		"redline_rpm": 5500.0,
+		"rev_limiter_rpm": 5700.0,
+		"rev_limiter_hard_cut": false,
+		"peak_torque_nm": 280.0,
+		"peak_torque_rpm": 2400.0,
+		"torque_curve": [
+			[700.0, 0.50], [1200.0, 0.68], [2000.0, 0.88], [2400.0, 1.00],
+			[3200.0, 0.92], [4000.0, 0.78], [5000.0, 0.60], [5500.0, 0.45],
+		],
+		"boost_spool_start_rpm": 0.0,
+		"boost_full_rpm": 0.0,
+		"boost_torque_multiplier": 1.0,
+		"flywheel_inertia": 0.28,
+		"drivetrain_loss": 0.16,
+		"gear_ratios": [3.6, 2.2, 1.5, 1.1, 0.88],
+		"final_drive_ratio": 4.3,
+		"wheel_radius_m": 0.35,
+		"engine_brake_torque_nm": 65.0,
+		"upshift_rpm_threshold": 0.80,
+		"downshift_rpm_threshold": 0.36,
+	},
+	# taxi
+	"taxi": {
+		"engine_name": "2.0L Taxi NA",
+		"engine_type": "NA",
+		"idle_rpm": 800.0,
+		"redline_rpm": 6200.0,
+		"rev_limiter_rpm": 6400.0,
+		"rev_limiter_hard_cut": false,
+		"peak_torque_nm": 210.0,
+		"peak_torque_rpm": 3800.0,
+		"torque_curve": [
+			[800.0, 0.44], [1500.0, 0.60], [2500.0, 0.78],
+			[3800.0, 1.00], [4500.0, 0.95], [5500.0, 0.82], [6200.0, 0.65],
+		],
+		"boost_spool_start_rpm": 0.0,
+		"boost_full_rpm": 0.0,
+		"boost_torque_multiplier": 1.0,
+		"flywheel_inertia": 0.11,
+		"drivetrain_loss": 0.13,
+		"gear_ratios": [3.4, 2.0, 1.4, 1.05, 0.85],
+		"final_drive_ratio": 4.1,
+		"wheel_radius_m": 0.31,
+		"engine_brake_torque_nm": 52.0,
+		"upshift_rpm_threshold": 0.83,
+		"downshift_rpm_threshold": 0.38,
+	},
+	# suv
+	"suv": {
+		"engine_name": "2.5L SUV NA",
+		"engine_type": "NA",
+		"idle_rpm": 750.0,
+		"redline_rpm": 6000.0,
+		"rev_limiter_rpm": 6200.0,
+		"rev_limiter_hard_cut": false,
+		"peak_torque_nm": 240.0,
+		"peak_torque_rpm": 3500.0,
+		"torque_curve": [
+			[750.0, 0.46], [1500.0, 0.62], [2500.0, 0.80],
+			[3500.0, 1.00], [4200.0, 0.94], [5000.0, 0.82], [6000.0, 0.62],
+		],
+		"boost_spool_start_rpm": 0.0,
+		"boost_full_rpm": 0.0,
+		"boost_torque_multiplier": 1.0,
+		"flywheel_inertia": 0.16,
+		"drivetrain_loss": 0.14,
+		"gear_ratios": [3.3, 1.95, 1.38, 1.02, 0.84],
+		"final_drive_ratio": 4.0,
+		"wheel_radius_m": 0.33,
+		"engine_brake_torque_nm": 60.0,
+		"upshift_rpm_threshold": 0.82,
+		"downshift_rpm_threshold": 0.37,
+	},
+	# lux
+	"lux": {
+		"engine_name": "3.0L Twin Turbo",
+		"engine_type": "TURBO",
+		"idle_rpm": 820.0,
+		"redline_rpm": 7500.0,
+		"rev_limiter_rpm": 7700.0,
+		"rev_limiter_hard_cut": false,
+		"peak_torque_nm": 520.0,
+		"peak_torque_rpm": 4200.0,
+		"torque_curve": [
+			[820.0, 0.25], [1200.0, 0.30], [2000.0, 0.40], [2800.0, 0.60],
+			[3500.0, 0.85], [4200.0, 1.00], [5000.0, 0.96],
+			[6000.0, 0.88], [7000.0, 0.76], [7500.0, 0.62],
+		],
+		"boost_spool_start_rpm": 2000.0,
+		"boost_full_rpm": 3500.0,
+		"boost_torque_multiplier": 1.50,
+		"flywheel_inertia": 0.14,
+		"drivetrain_loss": 0.12,
+		"gear_ratios": [3.15, 1.85, 1.25, 0.95, 0.75, 0.60],
+		"final_drive_ratio": 3.70,
+		"wheel_radius_m": 0.32,
+		"engine_brake_torque_nm": 90.0,
+		"upshift_rpm_threshold": 0.87,
+		"downshift_rpm_threshold": 0.43,
+	},
+	# sedan
+	"sedan": {
+		"engine_name": "4.0L Sport NA",
+		"engine_type": "NA",
+		"idle_rpm": 780.0,
+		"redline_rpm": 7000.0,
+		"rev_limiter_rpm": 7200.0,
+		"rev_limiter_hard_cut": false,
+		"peak_torque_nm": 420.0,
+		"peak_torque_rpm": 5000.0,
+		"torque_curve": [
+			[780.0, 0.38], [1500.0, 0.52], [2500.0, 0.70], [3500.0, 0.85],
+			[5000.0, 1.00], [5800.0, 0.95], [6500.0, 0.82], [7000.0, 0.65],
+		],
+		"boost_spool_start_rpm": 0.0,
+		"boost_full_rpm": 0.0,
+		"boost_torque_multiplier": 1.0,
+		"flywheel_inertia": 0.12,
+		"drivetrain_loss": 0.12,
+		"gear_ratios": [3.2, 1.9, 1.3, 0.98, 0.78],
+		"final_drive_ratio": 3.73,
+		"wheel_radius_m": 0.31,
+		"engine_brake_torque_nm": 85.0,
+		"upshift_rpm_threshold": 0.86,
+		"downshift_rpm_threshold": 0.42,
+	},
+}
+
+const ENGINE_AUDIO: Dictionary = {
+	"supra": {
+		"layers": [
+			{"path": "res://Audio/Engines/supra/idle.ogg",    "center_rpm": 800.0,  "pitch_range": 0.12},
+			{"path": "res://Audio/Engines/supra/low.ogg",     "center_rpm": 2000.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/supra/mid.ogg",     "center_rpm": 3500.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/supra/high.ogg",    "center_rpm": 5200.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/supra/redline.ogg", "center_rpm": 6800.0, "pitch_range": 0.10},
+		],
+		"turbo_path": "res://Audio/Engines/supra/turbo_spool.ogg",
+		"bov_path": "res://Audio/Engines/supra/bov.ogg",
+		"rev_limit_path": "res://Audio/Engines/supra/rev_limit.ogg",
+		"exhaust_off_path": "res://Audio/Engines/supra/exhaust_pop.ogg",
+		"bus": "Master",
+	},
+	"muscle": {
+		"layers": [
+			{"path": "res://Audio/Engines/muscle/idle.ogg",    "center_rpm": 800.0,  "pitch_range": 0.12},
+			{"path": "res://Audio/Engines/muscle/low.ogg",     "center_rpm": 1800.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/muscle/mid.ogg",     "center_rpm": 3200.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/muscle/high.ogg",    "center_rpm": 4800.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/muscle/redline.ogg", "center_rpm": 5800.0, "pitch_range": 0.10},
+		],
+		"turbo_path": null,
+		"bov_path": null,
+		"rev_limit_path": "res://Audio/Engines/muscle/rev_limit.ogg",
+		"exhaust_off_path": "res://Audio/Engines/muscle/exhaust_pop.ogg",
+		"bus": "Master",
+	},
+	"default": {
+		"layers": [
+			{"path": "res://Audio/Engines/default/idle.ogg", "center_rpm": 800.0,  "pitch_range": 0.12},
+			{"path": "res://Audio/Engines/default/low.ogg",  "center_rpm": 2000.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/default/mid.ogg",  "center_rpm": 3800.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/default/high.ogg", "center_rpm": 5500.0, "pitch_range": 0.12},
+		],
+		"turbo_path": null,
+		"bov_path": null,
+		"rev_limit_path": "res://Audio/Engines/default/rev_limit.ogg",
+		"exhaust_off_path": null,
+		"bus": "Master",
+	},
+	# van audio
+	"van": {
+		"layers": [
+			{"path": "res://Audio/Engines/default/idle.ogg", "center_rpm": 700.0,  "pitch_range": 0.12},
+			{"path": "res://Audio/Engines/default/low.ogg",  "center_rpm": 1800.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/default/mid.ogg",  "center_rpm": 3200.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/default/high.ogg", "center_rpm": 4800.0, "pitch_range": 0.12},
+		],
+		"turbo_path": null,
+		"bov_path": null,
+		"rev_limit_path": "res://Audio/Engines/default/rev_limit.ogg",
+		"exhaust_off_path": null,
+		"bus": "Master",
+	},
+	# taxi audio
+	"taxi": {
+		"layers": [
+			{"path": "res://Audio/Engines/default/idle.ogg", "center_rpm": 800.0,  "pitch_range": 0.12},
+			{"path": "res://Audio/Engines/default/low.ogg",  "center_rpm": 2000.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/default/mid.ogg",  "center_rpm": 3800.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/default/high.ogg", "center_rpm": 5500.0, "pitch_range": 0.12},
+		],
+		"turbo_path": null,
+		"bov_path": null,
+		"rev_limit_path": "res://Audio/Engines/default/rev_limit.ogg",
+		"exhaust_off_path": null,
+		"bus": "Master",
+	},
+	# suv audio
+	"suv": {
+		"layers": [
+			{"path": "res://Audio/Engines/default/idle.ogg", "center_rpm": 750.0,  "pitch_range": 0.12},
+			{"path": "res://Audio/Engines/default/low.ogg",  "center_rpm": 2000.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/default/mid.ogg",  "center_rpm": 3800.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/default/high.ogg", "center_rpm": 5500.0, "pitch_range": 0.12},
+		],
+		"turbo_path": null,
+		"bov_path": null,
+		"rev_limit_path": "res://Audio/Engines/default/rev_limit.ogg",
+		"exhaust_off_path": null,
+		"bus": "Master",
+	},
+	# lux audio
+	"lux": {
+		"layers": [
+			{"path": "res://Audio/Engines/supra/idle.ogg",    "center_rpm": 820.0,  "pitch_range": 0.12},
+			{"path": "res://Audio/Engines/supra/low.ogg",     "center_rpm": 2000.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/supra/mid.ogg",     "center_rpm": 3500.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/supra/high.ogg",    "center_rpm": 5200.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/supra/redline.ogg", "center_rpm": 7000.0, "pitch_range": 0.10},
+		],
+		"turbo_path": "res://Audio/Engines/supra/turbo_spool.ogg",
+		"bov_path": "res://Audio/Engines/supra/bov.ogg",
+		"rev_limit_path": "res://Audio/Engines/supra/rev_limit.ogg",
+		"exhaust_off_path": "res://Audio/Engines/supra/exhaust_pop.ogg",
+		"bus": "Master",
+	},
+	# sedan audio
+	"sedan": {
+		"layers": [
+			{"path": "res://Audio/Engines/muscle/idle.ogg",    "center_rpm": 780.0,  "pitch_range": 0.12},
+			{"path": "res://Audio/Engines/muscle/low.ogg",     "center_rpm": 1800.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/muscle/mid.ogg",     "center_rpm": 3200.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/muscle/high.ogg",    "center_rpm": 4800.0, "pitch_range": 0.15},
+			{"path": "res://Audio/Engines/muscle/redline.ogg", "center_rpm": 6500.0, "pitch_range": 0.10},
+		],
+		"turbo_path": null,
+		"bov_path": null,
+		"rev_limit_path": "res://Audio/Engines/muscle/rev_limit.ogg",
+		"exhaust_off_path": "res://Audio/Engines/muscle/exhaust_pop.ogg",
+		"bus": "Master",
+	},
+}
+
+var sim_rpm: float = 800.0
+var sim_gear: int = 1
+var sim_boost_level: float = 0.0
+var sim_rev_limiter_active: bool = false
+var sim_shift_cooldown: float = 0.0
+var sim_prev_throttle: float = 0.0
+var _realistic_car_id: String = "default"
+
+var _engine_layers: Array = []
+var _engine_layer_data: Array = []
+var _turbo_player: AudioStreamPlayer = null
+var _bov_player: AudioStreamPlayer = null
+var _rev_limit_player: AudioStreamPlayer = null
+var _exhaust_off_player: AudioStreamPlayer = null
+var _audio_loaded_car: String = ""
+var _bov_cooldown: float = 0.0
+var _rev_limit_cooldown: float = 0.0
+
 var drift_score_total: float = 0.0
 var drift_pending: float = 0.0
 var drift_combo_multiplier: float = 1.0
@@ -193,6 +543,7 @@ func _ready():
 	touch_button_pause.mouse_filter = Control.MOUSE_FILTER_STOP
 	touch_button_pause.gui_input.connect(_on_touch_pause_input)
 	_build_minimap_ui()
+	load_engine_for_car(_vehicle_id_to_car_string(vehicle_selected))
 
 func _build_minimap_ui():
 	var flag_groups = [
@@ -304,6 +655,9 @@ func _physics_process(delta):
 	steer_input = Input.get_axis("ui_right", "ui_left") * MAX_STEER
 	steering = lerp(steering, steer_input, delta * 7.0)
 	var throttle = Input.get_axis("ui_down", "ui_up")
+	if engine_mode == EngineMode.REALISTIC:
+		_apply_realistic_engine(delta, throttle)
+		return
 	var speed = linear_velocity.length()
 	_crash_cooldown = max(_crash_cooldown - delta, 0.0)
 	if _crash_cooldown <= 0.0 and _prev_speed > 8.0 and speed < _prev_speed * 0.45 and speed < 4.0:
@@ -1168,3 +1522,290 @@ func _display_selected_vehicle():
 		suv_body.hide()
 		lux_body.hide()
 		sedan_body.hide()
+
+func _vehicle_id_to_car_string(id: int) -> String:
+	match id:
+		1: return "van"
+		2: return "taxi"
+		3: return "suv"
+		4: return "lux"
+		5: return "sedan"
+	return "default"
+
+func _get_torque_at_rpm(spec: Dictionary, query_rpm: float) -> float:
+	var curve: Array = spec["torque_curve"]
+	if curve.is_empty():
+		return spec["peak_torque_nm"]
+	if query_rpm <= curve[0][0]:
+		return spec["peak_torque_nm"] * curve[0][1]
+	if query_rpm >= curve[curve.size() - 1][0]:
+		return spec["peak_torque_nm"] * curve[curve.size() - 1][1]
+	for i in range(curve.size() - 1):
+		var rpm_lo: float = curve[i][0]
+		var rpm_hi: float = curve[i + 1][0]
+		if query_rpm >= rpm_lo and query_rpm < rpm_hi:
+			var t = (query_rpm - rpm_lo) / (rpm_hi - rpm_lo)
+			var mult = lerpf(curve[i][1], curve[i + 1][1], t)
+			return spec["peak_torque_nm"] * mult
+	return spec["peak_torque_nm"]
+
+func _get_boost_multiplier(spec: Dictionary) -> float:
+	if spec["engine_type"] != "TURBO":
+		sim_boost_level = 0.0
+		return 1.0
+	var spool_start: float = spec["boost_spool_start_rpm"]
+	var spool_full: float = spec["boost_full_rpm"]
+	if spool_full <= spool_start:
+		sim_boost_level = 0.0
+		return 1.0
+	sim_boost_level = clamp((sim_rpm - spool_start) / (spool_full - spool_start), 0.0, 1.0)
+	return lerpf(1.0, spec["boost_torque_multiplier"], sim_boost_level)
+
+func _get_wheel_force_realistic(spec: Dictionary, throttle: float) -> float:
+	if sim_rev_limiter_active:
+		return 0.0
+	var gear_total: float = spec["gear_ratios"][sim_gear - 1] * spec["final_drive_ratio"]
+	var loss_factor: float = 1.0 - spec["drivetrain_loss"]
+	if throttle < 0.05:
+		return -spec["engine_brake_torque_nm"] * gear_total * loss_factor / spec["wheel_radius_m"]
+	var base_torque: float = _get_torque_at_rpm(spec, sim_rpm) * throttle
+	var boosted: float = base_torque * _get_boost_multiplier(spec)
+	return boosted * gear_total * loss_factor / spec["wheel_radius_m"]
+
+func _update_sim_rpm(spec: Dictionary, vehicle_speed_ms: float, throttle: float, delta: float) -> void:
+	var gear_total: float = spec["gear_ratios"][sim_gear - 1] * spec["final_drive_ratio"]
+	var demanded_rpm: float = (vehicle_speed_ms / spec["wheel_radius_m"]) * (60.0 / TAU) * gear_total
+	demanded_rpm = max(demanded_rpm, spec["idle_rpm"])
+
+	var inertia_factor: float = 1.0 / (spec["flywheel_inertia"] * 10.0)
+	sim_rpm = lerpf(sim_rpm, demanded_rpm, delta * inertia_factor)
+
+	if throttle > 0.05:
+		sim_rpm += throttle * spec["redline_rpm"] * 0.15 * delta * inertia_factor
+
+	if sim_rpm >= spec["rev_limiter_rpm"]:
+		if spec["rev_limiter_hard_cut"]:
+			sim_rpm = spec["rev_limiter_rpm"]
+			sim_rev_limiter_active = true
+		else:
+			sim_rpm -= 200.0
+			sim_rev_limiter_active = true
+	elif sim_rpm < spec["rev_limiter_rpm"] * 0.98:
+		sim_rev_limiter_active = false
+
+	sim_rpm = clamp(sim_rpm, spec["idle_rpm"], spec["rev_limiter_rpm"])
+	_handle_auto_shift(spec)
+
+func _handle_auto_shift(spec: Dictionary) -> void:
+	if sim_shift_cooldown > 0.0:
+		return
+	var max_gear: int = spec["gear_ratios"].size()
+	if sim_rpm >= spec["redline_rpm"] * spec["upshift_rpm_threshold"] and sim_gear < max_gear:
+		var old_ratio: float = spec["gear_ratios"][sim_gear - 1]
+		sim_gear += 1
+		var new_ratio: float = spec["gear_ratios"][sim_gear - 1]
+		sim_rpm = sim_rpm * (new_ratio / old_ratio)
+		sim_shift_cooldown = 0.4
+	elif sim_rpm <= spec["redline_rpm"] * spec["downshift_rpm_threshold"] and sim_gear > 1:
+		var old_ratio: float = spec["gear_ratios"][sim_gear - 1]
+		sim_gear -= 1
+		var new_ratio: float = spec["gear_ratios"][sim_gear - 1]
+		sim_rpm = sim_rpm * (new_ratio / old_ratio)
+		sim_shift_cooldown = 0.4
+
+func _apply_realistic_engine(delta: float, throttle: float) -> void:
+	var spec: Dictionary = ENGINE_SPECS.get(_realistic_car_id, ENGINE_SPECS["default"])
+	sim_shift_cooldown = max(sim_shift_cooldown - delta, 0.0)
+	var speed := linear_velocity.length()
+	_update_sim_rpm(spec, speed, throttle, delta)
+	var wheel_force := _get_wheel_force_realistic(spec, throttle)
+	if wheel_force < 0.0 and speed < 0.5:
+		wheel_force = 0.0
+	engine_force = wheel_force * realistic_output_multiplier
+	_update_engine_audio(delta, throttle)
+	sim_prev_throttle = throttle
+
+func _load_engine_audio(car_id: String) -> void:
+	if _audio_loaded_car == car_id:
+		return
+	for p in _engine_layers:
+		if is_instance_valid(p):
+			p.queue_free()
+	_engine_layers = []
+	_engine_layer_data = []
+	for player in [_turbo_player, _bov_player, _rev_limit_player, _exhaust_off_player]:
+		if is_instance_valid(player):
+			player.queue_free()
+	_turbo_player = null
+	_bov_player = null
+	_rev_limit_player = null
+	_exhaust_off_player = null
+
+	var audio_spec: Dictionary = ENGINE_AUDIO.get(car_id, ENGINE_AUDIO["default"])
+	var bus_name: String = audio_spec.get("bus", "Master")
+
+	for layer in audio_spec["layers"]:
+		var path: String = layer["path"]
+		if not ResourceLoader.exists(path):
+			push_warning("RealisticEngine: missing audio layer — " + path)
+			continue
+		var player := AudioStreamPlayer.new()
+		var stream = load(path)
+		if stream is AudioStreamOggVorbis:
+			stream.loop = true
+		player.stream = stream
+		player.autoplay = false
+		player.bus = bus_name
+		player.volume_db = -80.0
+		add_child(player)
+		player.play()
+		_engine_layers.append(player)
+		_engine_layer_data.append(layer)
+
+	if audio_spec["turbo_path"] != null and ResourceLoader.exists(audio_spec["turbo_path"]):
+		_turbo_player = AudioStreamPlayer.new()
+		var stream = load(audio_spec["turbo_path"])
+		if stream is AudioStreamOggVorbis:
+			stream.loop = true
+		_turbo_player.stream = stream
+		_turbo_player.autoplay = false
+		_turbo_player.bus = bus_name
+		_turbo_player.volume_db = -80.0
+		add_child(_turbo_player)
+		_turbo_player.play()
+	elif audio_spec["turbo_path"] != null:
+		push_warning("RealisticEngine: missing turbo audio — " + audio_spec["turbo_path"])
+
+	if audio_spec["bov_path"] != null and ResourceLoader.exists(audio_spec["bov_path"]):
+		_bov_player = AudioStreamPlayer.new()
+		_bov_player.stream = load(audio_spec["bov_path"])
+		_bov_player.autoplay = false
+		_bov_player.bus = bus_name
+		_bov_player.volume_db = 0.0
+		add_child(_bov_player)
+	elif audio_spec["bov_path"] != null:
+		push_warning("RealisticEngine: missing BOV audio — " + audio_spec["bov_path"])
+
+	if audio_spec["rev_limit_path"] != null and ResourceLoader.exists(audio_spec["rev_limit_path"]):
+		_rev_limit_player = AudioStreamPlayer.new()
+		_rev_limit_player.stream = load(audio_spec["rev_limit_path"])
+		_rev_limit_player.autoplay = false
+		_rev_limit_player.bus = bus_name
+		_rev_limit_player.volume_db = 0.0
+		add_child(_rev_limit_player)
+	elif audio_spec["rev_limit_path"] != null:
+		push_warning("RealisticEngine: missing rev-limit audio — " + audio_spec["rev_limit_path"])
+
+	if audio_spec["exhaust_off_path"] != null and ResourceLoader.exists(audio_spec["exhaust_off_path"]):
+		_exhaust_off_player = AudioStreamPlayer.new()
+		_exhaust_off_player.stream = load(audio_spec["exhaust_off_path"])
+		_exhaust_off_player.autoplay = false
+		_exhaust_off_player.bus = bus_name
+		_exhaust_off_player.volume_db = -3.0
+		add_child(_exhaust_off_player)
+	elif audio_spec["exhaust_off_path"] != null:
+		push_warning("RealisticEngine: missing exhaust-off audio — " + audio_spec["exhaust_off_path"])
+
+	_audio_loaded_car = car_id
+
+func _get_layer_volume(layer_index: int, current_rpm: float) -> float:
+	var n: int = _engine_layer_data.size()
+	if n == 0:
+		return 0.0
+	if n == 1:
+		return 1.0 if layer_index == 0 else 0.0
+	if current_rpm <= _engine_layer_data[0]["center_rpm"]:
+		return 1.0 if layer_index == 0 else 0.0
+	if current_rpm >= _engine_layer_data[n - 1]["center_rpm"]:
+		return 1.0 if layer_index == n - 1 else 0.0
+	for i in range(n - 1):
+		var lo: float = _engine_layer_data[i]["center_rpm"]
+		var hi: float = _engine_layer_data[i + 1]["center_rpm"]
+		if current_rpm >= lo and current_rpm < hi:
+			var t: float = (current_rpm - lo) / (hi - lo)
+			t = clamp(t, 0.0, 1.0)
+			t = t * t * (3.0 - 2.0 * t)  # smoothstep
+			if layer_index == i:
+				return 1.0 - t
+			elif layer_index == i + 1:
+				return t
+			else:
+				return 0.0
+	return 0.0
+
+func _get_layer_pitch(layer_index: int, current_rpm: float) -> float:
+	var center: float = _engine_layer_data[layer_index]["center_rpm"]
+	var pitch_range: float = _engine_layer_data[layer_index]["pitch_range"]
+	var ratio: float = current_rpm / center
+	return clamp(ratio, 1.0 - pitch_range, 1.0 + pitch_range)
+
+func _update_engine_audio(delta: float, throttle: float) -> void:
+	if _engine_layers.is_empty():
+		return
+	var spec: Dictionary = ENGINE_SPECS.get(_realistic_car_id, ENGINE_SPECS["default"])
+	_bov_cooldown = max(0.0, _bov_cooldown - delta)
+	_rev_limit_cooldown = max(0.0, _rev_limit_cooldown - delta)
+
+	for i in range(_engine_layers.size()):
+		var target_vol_linear: float = _get_layer_volume(i, sim_rpm)
+		var target_pitch: float = _get_layer_pitch(i, sim_rpm)
+		var target_db: float = -80.0 if target_vol_linear < 0.001 else linear_to_db(target_vol_linear)
+		_engine_layers[i].volume_db = lerpf(_engine_layers[i].volume_db, target_db, delta * 8.0)
+		_engine_layers[i].pitch_scale = lerpf(_engine_layers[i].pitch_scale, target_pitch, delta * 12.0)
+
+	if _turbo_player:
+		var turbo_db: float = lerpf(-40.0, -6.0, sim_boost_level)
+		_turbo_player.volume_db = lerpf(_turbo_player.volume_db, turbo_db, delta * 6.0)
+		_turbo_player.pitch_scale = lerpf(0.85, 1.2, sim_boost_level)
+
+	if _bov_player and spec["engine_type"] == "TURBO":
+		var was_on_throttle: bool = sim_prev_throttle > 0.4
+		var just_lifted: bool = throttle < 0.1
+		var boost_present: bool = sim_boost_level > 0.3
+		if was_on_throttle and just_lifted and boost_present and _bov_cooldown <= 0.0:
+			_bov_player.pitch_scale = randf_range(0.92, 1.08)
+			_bov_player.play()
+			_bov_cooldown = 1.2
+
+	if _exhaust_off_player and spec["engine_type"] == "NA":
+		var rpm_normalized: float = sim_rpm / spec["redline_rpm"]
+		var was_on_throttle: bool = sim_prev_throttle > 0.5
+		var just_lifted: bool = throttle < 0.1
+		if was_on_throttle and just_lifted and rpm_normalized > 0.5 and _bov_cooldown <= 0.0:
+			_exhaust_off_player.pitch_scale = randf_range(0.9, 1.1)
+			_exhaust_off_player.play()
+			_bov_cooldown = 0.8
+
+	if _rev_limit_player and sim_rev_limiter_active and _rev_limit_cooldown <= 0.0:
+		_rev_limit_player.pitch_scale = randf_range(0.95, 1.05)
+		_rev_limit_player.play()
+		_rev_limit_cooldown = 0.08
+
+func toggle_engine_mode() -> void:
+	if engine_mode == EngineMode.LEGACY:
+		engine_mode = EngineMode.REALISTIC
+		print("Engine mode: REALISTIC")
+	else:
+		engine_mode = EngineMode.LEGACY
+		print("Engine mode: LEGACY")
+
+func get_engine_debug_info() -> Dictionary:
+	return {
+		"sim_rpm": sim_rpm,
+		"sim_gear": sim_gear,
+		"sim_boost_level": sim_boost_level,
+		"sim_rev_limiter_active": sim_rev_limiter_active,
+		"engine_mode": "REALISTIC" if engine_mode == EngineMode.REALISTIC else "LEGACY",
+		"car_id": _realistic_car_id,
+	}
+
+func load_engine_for_car(car_id: String) -> void:
+	_realistic_car_id = car_id
+	var spec: Dictionary = ENGINE_SPECS.get(car_id, ENGINE_SPECS["default"])
+	sim_rpm = spec["idle_rpm"]
+	sim_gear = 1
+	sim_boost_level = 0.0
+	sim_rev_limiter_active = false
+	sim_shift_cooldown = 0.0
+	sim_prev_throttle = 0.0
+	_load_engine_audio(car_id)
