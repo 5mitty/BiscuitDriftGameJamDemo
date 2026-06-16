@@ -46,7 +46,7 @@ const CAR_STATS = {
 enum EngineMode { LEGACY, REALISTIC }
 var engine_mode: EngineMode = EngineMode.REALISTIC
 
-@export var realistic_output_multiplier: float = 0.03
+@export var realistic_output_multiplier: float = 0.025
 
 const ENGINE_SPECS: Dictionary = {
 	"supra": {
