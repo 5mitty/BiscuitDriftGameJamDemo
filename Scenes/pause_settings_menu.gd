@@ -483,7 +483,6 @@ func _on_volume_changed(value: float, bus_name: String):
 func _save_settings():
 	var cfg := ConfigFile.new()
 	cfg.set_value("meta", "version", 2)
-	cfg.set_value("controls", "touch_gamepad", touch_gamepad_enabled)
 	for bus in ["Master", "Music", "SFX"]:
 		var idx = AudioServer.get_bus_index(bus)
 		if idx != -1:
@@ -516,9 +515,6 @@ func _load_settings():
 		cfg.set_value("meta", "version", 2)
 		cfg.save(settings_path)
 		return
-
-	touch_gamepad_enabled = cfg.get_value("controls", "touch_gamepad", false)
-	call_deferred("_apply_touch_gamepad", touch_gamepad_enabled)
 
 	for bus in ["Master", "Music", "SFX"]:
 		var idx = AudioServer.get_bus_index(bus)
